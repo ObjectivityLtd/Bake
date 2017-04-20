@@ -1,0 +1,8 @@
+version: 1.0.{build}
+
+install:
+  - ps: ./build/build.ps1
+  
+artifacts:
+  - path: Cake.Build.Bootstrap.zip
+  
