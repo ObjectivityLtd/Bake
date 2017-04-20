@@ -20,7 +20,7 @@ environment:
   PSGalleryNugetApiKey:
     secure: IpwbqCY/2gU1iKYzF6bPJtILUY789f9fpgt+zP0LRrOK5Y3JXajA5yk/XaRkVjuy
   GithubAuthToken:
-    secure: UwJX2Xu80Ciz5sgYuYD5W6smId6FntJdCXE319JAXz4M67cyyUClkMwGBdAt0hVo
+    secure: PkFAZB6f1lwOR9i3Mn9mR+kQBszikFVxmrhtOGK7p/xKlVF8o/htJc9LSQDSi3bN
 
 install:
 - ps: Install-PackageProvider -Name NuGet -MinimumVersion '2.8.5.201' -Force -Verbose
