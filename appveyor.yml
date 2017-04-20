@@ -25,7 +25,7 @@ artifacts:
 deploy:
   - provider: GitHub
     auth_token: $(GithubAuthToken)
-    artifact: /.*\.ps1.*/
+    artifact: /.*\.zip/
     draft: false
     prerelease: false
     on:
