@@ -10,7 +10,7 @@ artifacts:
     type: file
     
 deploy:
-  - provider: Github
+  - provider: GitHub
     artifact: /.*\.ps1.*/
     draft: false
     prerelease: false
