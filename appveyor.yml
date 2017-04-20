@@ -5,5 +5,10 @@ build_script:
   - ps: ./build.ps1
   
 artifacts:
-  - path: Cake.Build.Bootstrap.zip
+  - path: .
+  - name: Cake.Build.Bootstrap.zip
+  - type: zip
+  
+ 
+
   
