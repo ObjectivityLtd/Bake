@@ -2,7 +2,19 @@ skip_commits:
   files:
     - README.md
 
-version: 1.0.{build}
+image: WMF 5
+
+init:
+  # Set "build version number" to "short-commit-hash" or when tagged to "tag name"
+  - ps: >-
+      if ($env:APPVEYOR_REPO_TAG -eq "true")
+      {
+        Update-AppveyorBuild -Version "$env:APPVEYOR_REPO_TAG_NAME"
+      }
+      else
+      {
+        Update-AppveyorBuild -Version "dev-$($env:APPVEYOR_REPO_COMMIT.substring(0,7))"
+      }
 
 environment:
   PSGalleryNugetApiKey:
