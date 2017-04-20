@@ -6,9 +6,5 @@ build_script:
   
 artifacts:
   - path: .
-  - name: Cake.Build.Bootstrap.zip
-  - type: zip
-  
- 
-
-  
+    name: Cake.Build.Bootstrap.zip
+    type: zip
