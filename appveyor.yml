@@ -6,5 +6,5 @@ build_script:
   
 artifacts:
   - path: src
-  - name: Cake.Build.Bootstrap.ps1
+    name: Cake.Build.Bootstrap.ps1
   
