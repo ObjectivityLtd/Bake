@@ -8,3 +8,12 @@ artifacts:
   - path: src/Cake.Build.Bootstrap.ps1
     name: Cake.Build.Bootstrap.ps1
     type: file
+    
+deploy:
+  - provider: Github
+    artifact: /.*\.ps1.*/
+    draft: false
+    prerelease: false
+    on:
+      branch: master
+      appveyor_repo_tag: true
