@@ -4,8 +4,6 @@ skip_commits:
 
 version: 1.0.{build}
 
-image: WMF 5
-
 environment:
   PSGalleryNugetApiKey:
     secure: IpwbqCY/2gU1iKYzF6bPJtILUY789f9fpgt+zP0LRrOK5Y3JXajA5yk/XaRkVjuy
@@ -34,7 +32,7 @@ deploy:
       branch: master
       appveyor_repo_tag: true
       
-deploy_script:
+after_deploy:
   - ps: Publish-Script -Path ($env:APPVEYOR_BUILD_FOLDER + '/src/Cake.Build.Bootstrap.ps1') -NuGetApiKey $env:PSGalleryNugetApiKey -Verbose -Force
     on:
       branch: master
