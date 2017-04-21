@@ -6,29 +6,14 @@
 
 var target = Argument<string>("target", "Default");
 var configuration = Argument<string>("configuration", "Release");
+var packageVersion = Argument<string>("packageVersion", "0.0.1-dev");
 
 ///////////////////////////////////////////////////////////////////////////////
 // GLOBAL VARIABLES
 ///////////////////////////////////////////////////////////////////////////////
 
-var sourceDir = "..\\src";
-var outputDir = "..\\bin";
-
-///////////////////////////////////////////////////////////////////////////////
-// SETUP / TEARDOWN
-///////////////////////////////////////////////////////////////////////////////
-
-Setup(() =>
-{
-    // Executed BEFORE the first task.
-    Information("Running tasks...");
-});
-
-Teardown(() =>
-{
-    // Executed AFTER the last task.
-    Information("Finished running tasks.");
-});
+var sourceDir = "../src";
+var outputDir = "../bin";
 
 ///////////////////////////////////////////////////////////////////////////////
 // TASK DEFINITIONS
@@ -41,12 +26,19 @@ Task("Clean")
     CleanDirectories(outputDir);
 });
 
-Task("CodeAnalyze")
-    .Description("Run powershell code analyzer")
-    .Does(() => 
+Task("Build")
+    .Description("Builds nuget package")
+    .Does(() =>
 {
-    StartPowershellFile("RunPSScriptAnalyzer.ps1");
+    var settings = new DotNetCoreBuildSettings
+    {
+        Framework = "netcoreapp1.1",
+        Configuration = "Release",
+        ArgumentCustomization = args => args.Append("/p:PackageVersion=" + packageVersion)
+    };
+    DotNetCoreBuild("../Cake.CD.csproj", settings);
 });
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // TARGETS
@@ -55,7 +47,7 @@ Task("CodeAnalyze")
 Task("Default")
     .Description("This is the default task which will be ran if no specific target is passed in.")
     .IsDependentOn("Clean")
-    .IsDependentOn("CodeAnalyze");
+    .IsDependentOn("Build");
     
 
 ///////////////////////////////////////////////////////////////////////////////

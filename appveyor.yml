@@ -2,7 +2,7 @@ skip_commits:
   files:
     - README.md
 
-image: WMF 5
+image: Visual Studio 2017
 
 init:
   # Set "build version number" to "short-commit-hash" or when tagged to "tag name"
@@ -17,17 +17,16 @@ init:
       }
 
 environment:
-  PSGalleryNugetApiKey:
-    secure: IpwbqCY/2gU1iKYzF6bPJtILUY789f9fpgt+zP0LRrOK5Y3JXajA5yk/XaRkVjuy
+  NugetApiKey:
+    secure: DIE2y66RzXWvp2Q0wIOLlBTjxILBGeHyyg3pjwWjdVrggzuj9BuMWCdfHFmt9nt2
   GithubAuthToken:
     secure: PkFAZB6f1lwOR9i3Mn9mR+kQBszikFVxmrhtOGK7p/xKlVF8o/htJc9LSQDSi3bN
 
-install:
-- ps: Install-PackageProvider -Name NuGet -MinimumVersion '2.8.5.201' -Force -Verbose
+configuration: Release
 
 build_script:
   - cd build
-  - ps: ./build.ps1
+  - ps: ./build.ps1 -ScriptArgs '-packageVersion="{version}"'
   
 artifacts:
   - path: src
@@ -43,9 +42,6 @@ deploy:
     on:
       branch: master
       appveyor_repo_tag: true
-      
-after_deploy:
-  - ps: Publish-Script -Path ($env:APPVEYOR_BUILD_FOLDER + '/src/Cake.Build.Bootstrap.ps1') -NuGetApiKey $env:PSGalleryNugetApiKey -Verbose -Force
-    on:
-      branch: master
-      appveyor_repo_tag: true
+  - provider: NuGet
+    api_key: $(NugetApiKey)
+    artifact: /bin/Release/

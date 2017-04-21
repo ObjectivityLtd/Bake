@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
+    <AssemblyName>dotnet-cake</AssemblyName>
+    <PackageId>Cake.CD</PackageId>
+    <PackageVersion>1.0.0</PackageVersion>
+    <Authors>ObjectivityLtd</Authors>
+    <Title>Cake Continuous Delivery</Title>
+    <Description>Adds Continuous Delivery capabilities to .NET 4 / .NET 5 projects using Cake and dotnet cli.</Description>
+    <Copyright>Objectivity Bespoke Software Specialists, MIT license</Copyright>
+    <PackageTags>build deploy cake CI CD continuous integration delivery cli</PackageTags>
+    <PackageProjectUrl>https://github.com/ObjectivityLtd/Cake.CD</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/ObjectivityLtd/Cake.CD/blob/master/LICENSE</PackageLicenseUrl>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+  </PropertyGroup>
+  <ItemGroup>
+    <DotNetCliToolReference Include="DotNetInit" Version="*" />
+    <Content Include="build\build.cake" />
+    <Content Include="src\DotNetCake\Program.cs" />
+  </ItemGroup>
+</Project>
