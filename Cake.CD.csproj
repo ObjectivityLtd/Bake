@@ -16,7 +16,6 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
   <ItemGroup>
-    <DotNetCliToolReference Include="DotNetInit" Version="*" />
     <Content Include="build\build.cake" />
     <Content Include="src\DotNetCake\Program.cs" />
   </ItemGroup>

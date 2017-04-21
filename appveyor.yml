@@ -26,7 +26,7 @@ configuration: Release
 
 build_script:
   - cd build
-  - ps: ./build.ps1 -ScriptArgs '-packageVersion="{version}"'
+  - ps: ./build.ps1 -ScriptArgs '-packageVersion="$(version)"'
   
 artifacts:
   - path: src
