@@ -43,3 +43,5 @@ $buildFolder = ".\Build";
 if(-Not (Test-Path $buildFolder)){
     New-Item .\Build -ItemType Directory
 }
+
+"build.ps1","build.cake"|%{Invoke-RestMethod -Uri "https://raw.githubusercontent.com/cake-build/bootstrapper/master/res/scripts/$($_)" -OutFile $buildFolder\$_}
