@@ -30,6 +30,8 @@ Task("Build")
     .Description("Builds nuget package")
     .Does(() =>
 {
+    DotNetCoreRestore("../Cake.CD.csproj");
+    
     var settings = new DotNetCoreBuildSettings
     {
         Framework = "netcoreapp1.1",
