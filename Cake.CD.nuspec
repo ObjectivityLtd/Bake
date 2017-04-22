@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>Cake.CD</id>
+    <version>$version$</version>
+    <title>Cake Continuous Delivery</title>
+    <authors>ObjectivityLtd</authors>
+    <projectUrl>https://github.com/ObjectivityLtd/Cake.CD</projectUrl>
+    <licenseUrl>https://github.com/ObjectivityLtd/Cake.CD/blob/master/LICENSE</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Adds Continuous Delivery capabilities to .NET 4 / .NET 5 projects using Cake and dotnet cli.</description>
+    <copyright>Objectivity Bespoke Software Specialists, MIT license</copyright>
+    <tags>build deploy cake CI CD continuous integration delivery cli</tags>
+  </metadata>
+  <files>
+    <file src="bin\Release\net*\**" target="lib" exclude="**\templates\**" />
+    <file src="bin\Release\net452\**" target="tools" />
+  </files>
+</package>
+

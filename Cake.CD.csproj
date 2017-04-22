@@ -2,21 +2,23 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp1.1</TargetFramework>
+    <TargetFrameworks>net452;netstandard1.6</TargetFrameworks>
     <AssemblyName>dotnet-cake</AssemblyName>
-    <PackageId>Cake.CD</PackageId>
-    <PackageVersion>1.0.0</PackageVersion>
-    <Authors>ObjectivityLtd</Authors>
-    <Title>Cake Continuous Delivery</Title>
-    <Description>Adds Continuous Delivery capabilities to .NET 4 / .NET 5 projects using Cake and dotnet cli.</Description>
-    <Copyright>Objectivity Bespoke Software Specialists, MIT license</Copyright>
-    <PackageTags>build deploy cake CI CD continuous integration delivery cli</PackageTags>
-    <PackageProjectUrl>https://github.com/ObjectivityLtd/Cake.CD</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/ObjectivityLtd/Cake.CD/blob/master/LICENSE</PackageLicenseUrl>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' != 'netstandard1.6' ">
+    <Reference Include="System" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="build\build.cake" />
     <Content Include="src\DotNetCake\Program.cs" />
+    <Content Include="templates\build\build.cake">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="templates\build\build.ps1">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="templates\deploy\deploy.cake" />
+    <Content Include="templates\deploy\deploy.ps1" />
   </ItemGroup>
 </Project>

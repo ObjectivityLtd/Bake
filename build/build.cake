@@ -27,20 +27,29 @@ Task("Clean")
 });
 
 Task("Build")
-    .Description("Builds nuget package")
+    .Description("Builds Cake.CD")
     .Does(() =>
 {
     DotNetCoreRestore("../Cake.CD.csproj");
     
     var settings = new DotNetCoreBuildSettings
     {
-        Framework = "netcoreapp1.1",
         Configuration = "Release",
         ArgumentCustomization = args => args.Append("/p:PackageVersion=" + packageVersion)
     };
     DotNetCoreBuild("../Cake.CD.csproj", settings);
 });
 
+Task("Package")
+    .Description("Creates nuget package")
+    .IsDependentOn("Build")
+    .Does(() =>
+{
+    var nugetPackSettings = new NuGetPackSettings {
+        Version = packageVersion
+    };
+    NuGetPack("../Cake.CD.nuspec", nugetPackSettings);
+});
 
 ///////////////////////////////////////////////////////////////////////////////
 // TARGETS
@@ -49,7 +58,7 @@ Task("Build")
 Task("Default")
     .Description("This is the default task which will be ran if no specific target is passed in.")
     .IsDependentOn("Clean")
-    .IsDependentOn("Build");
+    .IsDependentOn("Package");
     
 
 ///////////////////////////////////////////////////////////////////////////////

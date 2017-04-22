@@ -2,3 +2,5 @@ Build/tools
 /obj
 /bin
 /.vscode
+/.vs
+*.nupkg
