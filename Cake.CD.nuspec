@@ -14,7 +14,8 @@
   </metadata>
   <files>
     <file src="bin\Release\net*\**" target="lib" exclude="**\templates\**" />
-    <file src="bin\Release\net452\**" target="tools" />
+    <file src="bin\Release\net452\**" target="tools" exclude="**\templates\**" />
+    <file src="templates\**" target="templates" />
   </files>
 </package>
 
