@@ -1,17 +1,20 @@
 ﻿using System;
-using System.IO;
-using System.Reflection;
-using System.Text;
 
 namespace DotNetCake
 {
     class Program
     {
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
-            Console.WriteLine("Starting Cake.CD");
-            new CommandLineParser().Parse(args);
-        }        
+            return GetCommandLineParser().Parse(args);
+        }
+        
+        static CommandLineParser GetCommandLineParser()
+        {
+            var templateFileProvider = new TemplateFileProvider();
+            var buildGenerator = new BuildGenerator(templateFileProvider);
+            return new CommandLineParser(buildGenerator);
+        }
     }
 }
 

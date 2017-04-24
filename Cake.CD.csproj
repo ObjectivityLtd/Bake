@@ -2,13 +2,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net452;netcoreapp1.0;netstandard1.6</TargetFrameworks>
+    <TargetFrameworks>net452;netcoreapp1.0</TargetFrameworks>
     <AssemblyName>dotnet-cake</AssemblyName>
+    <Version>0.0.1</Version>
   </PropertyGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' != 'netstandard1.6' ">
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>
+
   <ItemGroup>
     <Content Include="build\build.cake" />
     <Content Include="src\DotNetCake\Program.cs" />
@@ -18,10 +16,22 @@
     <Content Include="templates\build\build.ps1">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="templates\deploy\deploy.cake" />
-    <Content Include="templates\deploy\deploy.ps1" />
+    <Content Include="templates\deploy\deploy.cake">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="templates\deploy\deploy.ps1">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="src\DotNetCake\TemplateFileProvider.cs" />
     <Content Include="src\DotNetCake\CommandLineParser.cs" />
     <Content Include="src\DotNetCake\BuildGenerator.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.CommandLineUtils" Version="1.1.0">
+      <PrivateAssets>All</PrivateAssets>
+    </PackageReference>  
+    <PackageReference Include="Microsoft.Extensions.PlatformAbstractions" Version="1.1.0">
+      <PrivateAssets>All</PrivateAssets>
+    </PackageReference>  
   </ItemGroup>
 </Project>

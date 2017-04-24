@@ -35,7 +35,7 @@ Task("Build")
     var settings = new DotNetCoreBuildSettings
     {
         Configuration = "Release",
-        ArgumentCustomization = args => args.Append("/p:PackageVersion=" + packageVersion)
+        ArgumentCustomization = args => args.Append("/p:Version=" + packageVersion)
     };
     DotNetCoreBuild("../Cake.CD.csproj", settings);
 });

@@ -1,11 +1,19 @@
-public class BuildGenerator 
+namespace DotNetCake
 {
-
-    private TemplateFileProvider templateFileProvider = new TemplateFileProvider();
-
-    public void Generate()
+    public class BuildGenerator
     {
-        templateFileProvider.WriteTemplateFile("build/build.ps1");
-        templateFileProvider.WriteTemplateFile("build/build.cake");
+
+        private TemplateFileProvider templateFileProvider;
+
+        public BuildGenerator(TemplateFileProvider templateFileProvider)
+        {
+            this.templateFileProvider = templateFileProvider;
+        }
+
+        public void Generate()
+        {
+            templateFileProvider.WriteTemplateFile("build/build.ps1");
+            templateFileProvider.WriteTemplateFile("build/build.cake");
+        }
     }
 }
