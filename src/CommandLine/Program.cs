@@ -1,6 +1,7 @@
-﻿using System;
+﻿using Cake.CD.Command;
+using Cake.CD.Templating;
 
-namespace DotNetCake
+namespace Cake.CD.CommandLine
 {
     class Program
     {
@@ -12,8 +13,8 @@ namespace DotNetCake
         static CommandLineParser GetCommandLineParser()
         {
             var templateFileProvider = new TemplateFileProvider();
-            var buildGenerator = new BuildGenerator(templateFileProvider);
-            return new CommandLineParser(buildGenerator);
+            var commandRunner = new CommandRunner(templateFileProvider);
+            return new CommandLineParser(commandRunner);
         }
     }
 }

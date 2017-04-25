@@ -13,7 +13,7 @@ var packageVersion = Argument<string>("packageVersion", "0.0.1-dev");
 ///////////////////////////////////////////////////////////////////////////////
 
 var sourceDir = "../src";
-var outputDir = "../bin";
+var outputDir = "../src/bin";
 
 ///////////////////////////////////////////////////////////////////////////////
 // TASK DEFINITIONS
@@ -30,14 +30,14 @@ Task("Build")
     .Description("Builds Cake.CD")
     .Does(() =>
 {
-    DotNetCoreRestore("../Cake.CD.csproj");
+    DotNetCoreRestore(sourceDir + "/Cake.CD.csproj");
     
     var settings = new DotNetCoreBuildSettings
     {
         Configuration = "Release",
         ArgumentCustomization = args => args.Append("/p:Version=" + packageVersion)
     };
-    DotNetCoreBuild("../Cake.CD.csproj", settings);
+    DotNetCoreBuild(sourceDir + "/Cake.CD.csproj", settings);
 });
 
 Task("Package")
@@ -48,7 +48,7 @@ Task("Package")
     var nugetPackSettings = new NuGetPackSettings {
         Version = packageVersion
     };
-    NuGetPack("../Cake.CD.nuspec", nugetPackSettings);
+    NuGetPack("Cake.CD.nuspec", nugetPackSettings);
 });
 
 ///////////////////////////////////////////////////////////////////////////////

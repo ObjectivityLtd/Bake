@@ -1,11 +1,13 @@
-namespace DotNetCake
+using Cake.CD.Templating;
+
+namespace Cake.CD.Command
 {
-    public class BuildGenerator
+    public class GenerateBuildScriptsCommand
     {
 
         private TemplateFileProvider templateFileProvider;
 
-        public BuildGenerator(TemplateFileProvider templateFileProvider)
+        public GenerateBuildScriptsCommand(TemplateFileProvider templateFileProvider)
         {
             this.templateFileProvider = templateFileProvider;
         }

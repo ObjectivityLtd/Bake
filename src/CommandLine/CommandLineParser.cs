@@ -1,18 +1,19 @@
+using Cake.CD.Command;
 using Microsoft.Extensions.CommandLineUtils;
 using Microsoft.Extensions.PlatformAbstractions;
 using System.Reflection;
 
-namespace DotNetCake
+namespace Cake.CD.CommandLine
 {
     public class CommandLineParser
     {
-        private BuildGenerator buildGenerator;
+        private CommandRunner commandRunner;
 
         private CommandLineApplication cmd;
 
-        public CommandLineParser(BuildGenerator buildGenerator)
+        public CommandLineParser(CommandRunner commandRunner)
         {
-            this.buildGenerator = buildGenerator;
+            this.commandRunner = commandRunner;
             PrepareCommandLineApplication();
         }
 
@@ -23,9 +24,11 @@ namespace DotNetCake
 
         private void PrepareCommandLineApplication()
         {
-            cmd = new CommandLineApplication();
-            cmd.Name = isRunningInCoreCli() ? "cake" : "dotnet-cake";
-            cmd.FullName = "Cake.CD";
+            cmd = new CommandLineApplication()
+            {
+                Name = IsRunningInCoreCli() ? "cake" : "dotnet-cake",
+                FullName = "Cake.CD"
+            };
             cmd.HelpOption("-?|-h|--help");        
             cmd.VersionOption("--version", () => GetVersion());
             cmd.OnExecute(() =>
@@ -37,9 +40,10 @@ namespace DotNetCake
             PrepareAddCommands();
         }
 
-        private bool isRunningInCoreCli() {
+        private bool IsRunningInCoreCli() {
             return PlatformServices.Default.Application.RuntimeFramework.Identifier.StartsWith(".NETCore");
         }
+
         private string GetVersion()
         {
             return typeof(CommandLineParser)
@@ -66,12 +70,20 @@ namespace DotNetCake
                 config.Description = "adds build template";
                 config.OnExecute(() =>
                 {
-                    buildGenerator.Generate();
+                    this.commandRunner.GenerateBuildScripts();
+                    return 0;
+                });
+            });
+            buildCommand.Command("deploy", config =>
+            {
+                config.Description = "adds deploy template";
+                config.OnExecute(() =>
+                {
+                    this.commandRunner.GenerateDeployScripts();
                     return 0;
                 });
 
             });
         }
-
     }
 }

@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Reflection;
 
-namespace DotNetCake
+namespace Cake.CD.Templating
 {
     public class TemplateFileProvider
     {

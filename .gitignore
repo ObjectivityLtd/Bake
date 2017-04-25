@@ -1,6 +1,7 @@
 Build/tools
-/obj
-/bin
+/src/obj
+/src/bin
 /.vscode
 /.vs
 *.nupkg
+/src/*.user

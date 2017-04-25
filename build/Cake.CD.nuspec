@@ -14,14 +14,15 @@
     <developmentDependency>true</developmentDependency>
     <dependencies>
       <group targetFramework=".NETCoreApp1.0">
+        <dependency id="Cake.Common" version="0.19.4" />
         <dependency id="Microsoft.Extensions.CommandLineUtils" version="1.1.0" />
         <dependency id="Microsoft.Extensions.PlatformAbstractions" version="1.1.0" />
       </group>  
     </dependencies>
   </metadata>
   <files>
-    <file src="bin\Release\net*\**" target="lib" exclude="**\templates\**" />
-    <file src="bin\Release\net452\**" target="tools" exclude="**\templates\**" />
-    <file src="templates\**" target="templates" />
+    <file src="..\src\bin\Release\net*\**" target="lib" exclude="**\templates\**" />
+    <file src="..\src\bin\Release\net452\**" target="tools" exclude="**\templates\**" />
+    <file src="..\templates\**" target="templates" />
   </files>
 </package>
