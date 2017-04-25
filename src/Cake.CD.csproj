@@ -3,10 +3,10 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFrameworks>net452;netcoreapp1.0</TargetFrameworks>
-    <AssemblyName>dotnet-cake</AssemblyName>
+    <AssemblyName>Cake.CD</AssemblyName>
+    <AssemblyName Condition="'$(TargetFramework)' == 'netcoreapp1.0'">dotnet-cake</AssemblyName>
     <Version>0.0.1</Version>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Cake.Common" Version="0.19.4" />
     <PackageReference Include="Microsoft.Extensions.CommandLineUtils" Version="1.1.0">

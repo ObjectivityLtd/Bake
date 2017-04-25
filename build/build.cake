@@ -6,7 +6,7 @@
 
 var target = Argument<string>("target", "Default");
 var configuration = Argument<string>("configuration", "Release");
-var packageVersion = Argument<string>("packageVersion", "0.0.1-dev");
+var packageVersion = Argument<string>("packageVersion", "0.0.1");
 
 ///////////////////////////////////////////////////////////////////////////////
 // GLOBAL VARIABLES
@@ -41,7 +41,7 @@ Task("Build")
 });
 
 Task("Package")
-    .Description("Creates nuget package")
+    .Description("Creates nuget and chocolatey package")
     .IsDependentOn("Build")
     .Does(() =>
 {
@@ -49,6 +49,11 @@ Task("Package")
         Version = packageVersion
     };
     NuGetPack("Cake.CD.nuspec", nugetPackSettings);
+
+	var chocolateyPackSettings = new ChocolateyPackSettings {
+		Version = packageVersion
+	};
+	ChocolateyPack("Cake.CD.portable.nuspec", chocolateyPackSettings);
 });
 
 ///////////////////////////////////////////////////////////////////////////////
