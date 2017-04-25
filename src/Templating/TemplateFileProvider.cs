@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 
@@ -6,6 +7,14 @@ namespace Cake.CD.Templating
 {
     public class TemplateFileProvider
     {
+
+        public void WriteTemplateFiles(List<string> filePaths)
+        {
+            foreach (var filePath in filePaths)
+            {
+                this.WriteTemplateFile(filePath);
+            }
+        }
 
         public void WriteTemplateFile(string filePath)
         {
@@ -29,7 +38,7 @@ namespace Cake.CD.Templating
         {
             var assemblyLocation = Path.GetDirectoryName(typeof(TemplateFileProvider).GetTypeInfo().Assembly.Location);
             var srcLocation = "templates/" + filePath;
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 5; i++)
             {
                 var fullSrcLocation = Path.GetFullPath(Path.Combine(assemblyLocation, srcLocation));
                 if (File.Exists(fullSrcLocation))

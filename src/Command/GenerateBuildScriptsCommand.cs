@@ -1,4 +1,5 @@
 using Cake.CD.Templating;
+using System.Collections.Generic;
 
 namespace Cake.CD.Command
 {
@@ -7,15 +8,21 @@ namespace Cake.CD.Command
 
         private TemplateFileProvider templateFileProvider;
 
-        public GenerateBuildScriptsCommand(TemplateFileProvider templateFileProvider)
+        private CommandRunner commandRunner;
+
+        public GenerateBuildScriptsCommand(TemplateFileProvider templateFileProvider, CommandRunner commandRunner)
         {
             this.templateFileProvider = templateFileProvider;
+            this.commandRunner = commandRunner;
         }
 
         public void Generate()
         {
-            templateFileProvider.WriteTemplateFile("build/build.ps1");
-            templateFileProvider.WriteTemplateFile("build/build.cake");
+            var filePaths = new List<string>() { "build\\build.ps1", "build\\build.cake" };
+            templateFileProvider.WriteTemplateFiles(filePaths);
+
+            // TODO
+            commandRunner.UpdateVisualStudioSlnCommand.AddSolutionFolderToSlnFile("WebApplication1.sln", "Build", "Build", filePaths);
         }
     }
 }

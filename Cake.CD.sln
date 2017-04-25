@@ -11,7 +11,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{67F09A09
 		build\build.ps1 = build\build.ps1
 		build\Cake.CD.nuspec = build\Cake.CD.nuspec
 		build\Cake.CD.portable.nuspec = build\Cake.CD.portable.nuspec
-		build\test.cake.cd.ps1 = build\test.cake.cd.ps1
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Templates", "Templates", "{D0DF1056-B55C-4F26-84FA-94E68E3EF994}"

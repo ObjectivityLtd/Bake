@@ -5,3 +5,4 @@ Build/tools
 /.vs
 *.nupkg
 /src/*.user
+/src/Properties/launchSettings.json

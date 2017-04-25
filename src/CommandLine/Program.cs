@@ -1,5 +1,6 @@
 ﻿using Cake.CD.Command;
 using Cake.CD.Templating;
+using System;
 
 namespace Cake.CD.CommandLine
 {
@@ -7,7 +8,19 @@ namespace Cake.CD.CommandLine
     {
         static int Main(string[] args)
         {
-            return GetCommandLineParser().Parse(args);
+            try
+            {
+                return GetCommandLineParser().Parse(args);
+            } catch (Exception e)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Error: " + e.Message);
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.WriteLine("Stack trace: " + e.StackTrace);
+                Console.ResetColor();
+                return -1;
+            }
         }
         
         static CommandLineParser GetCommandLineParser()

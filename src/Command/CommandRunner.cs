@@ -5,28 +5,19 @@ namespace Cake.CD.Command
     public class CommandRunner
     {
 
-        private TemplateFileProvider templateFileProvider;
+        public GenerateBuildScriptsCommand GenerateBuildScriptsCommand { get; }
 
-        private GenerateBuildScriptsCommand generateBuildScriptsCommand;
+        public GenerateDeployScriptsCommand GenerateDeployScriptsCommand { get; }
 
-        private GenerateDeployScriptsCommand generateDeployScriptsCommand;
+        public UpdateVisualStudioSlnCommand UpdateVisualStudioSlnCommand { get; }
 
         public CommandRunner(TemplateFileProvider templateFileProvider)
         {
-            this.templateFileProvider = templateFileProvider;
-            this.generateBuildScriptsCommand = new GenerateBuildScriptsCommand(templateFileProvider);
-            this.generateDeployScriptsCommand = new GenerateDeployScriptsCommand(templateFileProvider);
-
+            var visualStudioSlnHandler = new VisualStudioSlnHandler();
+            GenerateBuildScriptsCommand = new GenerateBuildScriptsCommand(templateFileProvider, this);
+            GenerateDeployScriptsCommand = new GenerateDeployScriptsCommand(templateFileProvider);
+            UpdateVisualStudioSlnCommand = new UpdateVisualStudioSlnCommand(visualStudioSlnHandler);
         }
 
-        public void GenerateBuildScripts()
-        {
-            this.generateBuildScriptsCommand.Generate();
-        }
-
-        public void GenerateDeployScripts()
-        {
-            this.generateDeployScriptsCommand.Generate();
-        }
     }
 }

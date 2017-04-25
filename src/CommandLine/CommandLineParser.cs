@@ -70,7 +70,7 @@ namespace Cake.CD.CommandLine
                 config.Description = "adds build template";
                 config.OnExecute(() =>
                 {
-                    this.commandRunner.GenerateBuildScripts();
+                    this.commandRunner.GenerateBuildScriptsCommand.Generate();
                     return 0;
                 });
             });
@@ -79,7 +79,7 @@ namespace Cake.CD.CommandLine
                 config.Description = "adds deploy template";
                 config.OnExecute(() =>
                 {
-                    this.commandRunner.GenerateDeployScripts();
+                    this.commandRunner.GenerateDeployScriptsCommand.Generate();
                     return 0;
                 });
 
