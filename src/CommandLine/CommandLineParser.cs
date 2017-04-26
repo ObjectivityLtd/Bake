@@ -26,7 +26,7 @@ namespace Cake.CD.CommandLine
         {
             cmd = new CommandLineApplication()
             {
-                Name = IsRunningInCoreCli() ? "cake" : "dotnet-cake",
+                Name = IsRunningInCoreCli() ? "cake" : "Cake.CD",
                 FullName = "Cake.CD"
             };
             cmd.HelpOption("-?|-h|--help");        
@@ -69,7 +69,7 @@ namespace Cake.CD.CommandLine
             });
         }
 
-        private void PrepareAddCommands()
+        /*private void PrepareAddCommands()
         {
             var buildCommand = cmd.Command("add", config =>
             {
@@ -100,6 +100,6 @@ namespace Cake.CD.CommandLine
                 });
 
             });
-        }
+        }*/
     }
 }

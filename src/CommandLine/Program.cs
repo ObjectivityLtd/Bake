@@ -1,6 +1,10 @@
 ﻿using Autofac;
+using Cake.CD.Cake;
 using Cake.CD.Command;
 using Cake.CD.Templating;
+using Cake.Core.Composition;
+using Cake.Core.Modules;
+using Serilog;
 using System;
 using System.Reflection;
 
@@ -12,7 +16,8 @@ namespace Cake.CD.CommandLine
         {
             try
             {
-                var container = ConfigureDependencyInjection();
+                ConfigureLogger();
+                var container = ConfigureCakeCDContainer();
                 using (var scope = container.BeginLifetimeScope())
                 {
                     return scope.Resolve<CommandLineParser>().Parse(args);
@@ -20,29 +25,37 @@ namespace Cake.CD.CommandLine
                     
             } catch (Exception e)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Error: " + e.Message);
-                Console.WriteLine();
-                Console.ForegroundColor = ConsoleColor.DarkRed;
-                Console.WriteLine("Stack trace: " + e.StackTrace);
-                if (e.InnerException != null)
-                {
-                    Console.WriteLine("Inner exception: " + e.InnerException);
-                }
-                Console.ResetColor();
+                Log.Error(e, "");
                 return -1;
             }
         }
         
-        static IContainer ConfigureDependencyInjection()
+        private static IContainer ConfigureCakeCDContainer()
         {
             var builder = new ContainerBuilder();
             builder
                 .RegisterAssemblyTypes(typeof(Program).GetTypeInfo().Assembly)
-                .InstancePerLifetimeScope()
+                .SingleInstance()
                 .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies)
                 .AsSelf();
+
+            AddCakeCoreModules(builder);
             return builder.Build();
+        }
+
+        private static void AddCakeCoreModules(ContainerBuilder containerBuilder)
+        {
+            var cakeRegistrar = new ContainerRegistrar(containerBuilder);
+            cakeRegistrar.RegisterModule(new CoreModule());
+            cakeRegistrar.RegisterModule(new CakeCDModule());
+        }
+
+        private static void ConfigureLogger()
+        {
+            Log.Logger = new LoggerConfiguration()
+               .MinimumLevel.Debug()
+               .WriteTo.LiterateConsole()
+               .CreateLogger();
         }
     }
 }

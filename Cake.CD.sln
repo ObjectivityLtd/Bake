@@ -19,6 +19,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{63F507AA
 	ProjectSection(SolutionItems) = preProject
 		templates\build\build.cake = templates\build\build.cake
 		templates\build\build.ps1 = templates\build\build.ps1
+		EntityFrameworkMigrate.csx = EntityFrameworkMigrate.csx
+		GulpProject.csx = GulpProject.csx
+		msbuild.csx = msbuild.csx
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deploy", "Deploy", "{46733AE3-7578-4A9E-A16C-FCAF0D9E9C92}"

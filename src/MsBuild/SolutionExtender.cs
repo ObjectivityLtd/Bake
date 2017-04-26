@@ -1,5 +1,6 @@
 ﻿using Cake.Common.Solution;
 using Cake.Core.IO;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,29 +9,34 @@ using System.Text;
 
 namespace Cake.CD.Templating
 {
-
-    public class VisualStudioSlnHandler
+    // based on Cake.Common.Solution.SolutionParser
+    public class SolutionExtender
     {
 
         public void AddSolutionFolderToSlnFile(string slnFilePath, string solutionFolderName, string solutionFolderPath, List<string> filePaths)
+        {
+            var lines = ReadSolutionFile(slnFilePath);
+            var newLines = EnsureSolutionContainsFolderWithFiles(lines, slnFilePath, solutionFolderName, solutionFolderPath, filePaths);
+
+            if (newLines == lines)
+            {
+                Log.Information("Files already present in the solution file - skipping.");
+                return;
+            }
+
+            Log.Information("Saving solution file {SlnFile}", slnFilePath);
+            File.WriteAllLines(slnFilePath, newLines, Encoding.UTF8);
+        }
+
+        private List<string> ReadSolutionFile(string slnFilePath)
         {
             if (!File.Exists(slnFilePath))
             {
                 throw new InvalidOperationException(String.Format("Solution file '{0}' does not exist.", System.IO.Path.GetFullPath(slnFilePath)));
             }
-            Console.WriteLine("Parsing solution file '{0}'", slnFilePath);
-            var lines = File.ReadAllLines(slnFilePath, Encoding.UTF8).ToList();
-            var newLines = EnsureSolutionContainsFolderWithFiles(lines, slnFilePath, solutionFolderName, solutionFolderPath, filePaths);
-
-            if (newLines == lines)
-            {
-                Console.WriteLine("Files already present in the solution file - skipping.");
-                return;
-            }
-
-            Console.WriteLine("Saving solution file '{0}'", slnFilePath);
-            File.WriteAllLines(slnFilePath, newLines, Encoding.UTF8);
-        }
+            Log.Information("Parsing solution file {SlnFile}", slnFilePath);
+            return File.ReadAllLines(slnFilePath, Encoding.UTF8).ToList();
+        }  
 
         private List<string> EnsureSolutionContainsFolderWithFiles(List<string> lines, string slnFilePath, string solutionFolderName, string solutionFolderPath, List<string> filePaths)
         {
@@ -62,7 +68,7 @@ namespace Cake.CD.Templating
         private List<string> AddNewProjectSection(List<string> lines, int lastProjectLine, string solutionFolderName, string solutionFolderPath, List<string> filePaths)
         {
             var newLines = new List<string>();
-            Console.WriteLine("Adding solution folder '{0}'.", solutionFolderName);
+            Log.Information("Adding solution folder {SolutionFolder}.", solutionFolderName);
             newLines.Add(String.Format("Project(\"{0}\") = \"{1}\", \"{2}\", \"{3}\"", 
                 SolutionFolder.TypeIdentifier, solutionFolderName, solutionFolderPath, Guid.NewGuid().ToString().ToUpper()));
             newLines.Add("\tProjectSection(SolutionItems) = preProject");
@@ -98,7 +104,7 @@ namespace Cake.CD.Templating
             }
             foreach (var filePath in filePathsToAdd)
             {
-                Console.WriteLine("Adding file '{0}' to solution folder", filePath);
+                Log.Information("Adding file {File} to solution folder", filePath);
             }
             filePathsToAdd = filePathsToAdd.Select(path => String.Format("\t\t{0} = {0}", path)).ToList();
             var result = new List<string>(lines);
@@ -160,7 +166,6 @@ namespace Cake.CD.Templating
                 System.IO.Path.Combine(solutionPath, pathBuilder.ToString()),
                 projectTypeBuilder.ToString());
         }
-
 
     }
 }

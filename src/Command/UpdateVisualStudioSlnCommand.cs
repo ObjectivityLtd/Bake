@@ -5,9 +5,9 @@ namespace Cake.CD.Command
 {
     public class UpdateVisualStudioSlnCommand
     {
-        private VisualStudioSlnHandler visualStudioSlnHandler;
+        private SolutionExtender visualStudioSlnHandler;
 
-        public UpdateVisualStudioSlnCommand(VisualStudioSlnHandler visualStudioSlnHandler)
+        public UpdateVisualStudioSlnCommand(SolutionExtender visualStudioSlnHandler)
         {
             this.visualStudioSlnHandler = visualStudioSlnHandler;
         }

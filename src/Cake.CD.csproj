@@ -18,5 +18,7 @@
     <PackageReference Include="Microsoft.Extensions.PlatformAbstractions" Version="1.1.0">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>  
+    <PackageReference Include="Serilog" Version="2.4.0" />  
+    <PackageReference Include="Serilog.Sinks.Literate" Version="2.1.0" />  
   </ItemGroup>
 </Project>

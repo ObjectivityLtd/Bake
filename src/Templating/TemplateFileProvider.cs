@@ -1,3 +1,4 @@
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,17 +21,17 @@ namespace Cake.CD.Templating
         {
             if (File.Exists(filePath))
             {
-                Console.WriteLine("File '" + filePath + "' already exists - skipping.");
+                Log.Information("File {FilePath} already exists - skipping.", filePath);
                 return;
             }
             var srcPath = GetPathToTemplateFile(filePath);
             var dstDir = Path.GetDirectoryName(filePath);
             if (!Directory.Exists(dstDir))
             {
-                Console.WriteLine("Creating directory '" + dstDir + "'.");
+                Log.Information("Creating directory {Dir}.", dstDir);
                 Directory.CreateDirectory(dstDir);
             }
-            Console.WriteLine("Creating file '" + filePath + "'.");
+            Log.Information("Creating file {File}.", filePath);
             File.Copy(srcPath, filePath);
         }
 
@@ -47,7 +48,8 @@ namespace Cake.CD.Templating
                 }
                 srcLocation = "../" + srcLocation;
             }
-            throw new InvalidOperationException("Cannot find template file 'templates/" + filePath + "' at '" + assemblyLocation + "' or its parent directories.");
+            throw new InvalidOperationException(
+                String.Format("Cannot find template file 'templates/{0}' at '{1}' or its parent directories.", filePath, assemblyLocation));
         }
     }
 }

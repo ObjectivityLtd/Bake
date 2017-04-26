@@ -12,7 +12,7 @@ namespace Cake.CD.Command
 
         public void Run(string slnFilePath)
         {
-            var buildScriptPaths = commandRunner.GenerateBuildScriptsCommand.Generate();
+            var buildScriptPaths = commandRunner.GenerateBuildScriptsCommand.Generate(slnFilePath);
             var deployScriptPaths = commandRunner.GenerateDeployScriptsCommand.Generate();
             if (!String.IsNullOrWhiteSpace(slnFilePath))
             {
