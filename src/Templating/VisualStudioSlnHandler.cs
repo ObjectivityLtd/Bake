@@ -48,7 +48,7 @@ namespace Cake.CD.Templating
                     {
                         var currentSolutionFolderPath = slnDirectory.GetRelativePath(project.Path).FullPath;
                         this.AssertProjectPathsAreEqual(slnFilePath, solutionFolderName, solutionFolderPath, currentSolutionFolderPath);
-                        return this.EnsureProjectSectionContainsFiles(lines, i + 3, filePaths);
+                        return this.EnsureProjectSectionContainsFiles(lines, i + 2, filePaths);
                     }
                 }
                 else if (line.StartsWith("EndProject"))
@@ -63,10 +63,10 @@ namespace Cake.CD.Templating
         {
             var newLines = new List<string>();
             Console.WriteLine("Adding solution folder '{0}'.", solutionFolderName);
-            newLines.Add(String.Format("Project(\"{0}\") = \"{1}\", \"{2}\", ", SolutionFolder.TypeIdentifier, solutionFolderName, solutionFolderPath));
-            newLines.Add(String.Format("\"{0}\")", Guid.NewGuid().ToString().ToUpper()));
+            newLines.Add(String.Format("Project(\"{0}\") = \"{1}\", \"{2}\", \"{3}\"", 
+                SolutionFolder.TypeIdentifier, solutionFolderName, solutionFolderPath, Guid.NewGuid().ToString().ToUpper()));
             newLines.Add("\tProjectSection(SolutionItems) = preProject");
-            newLines = this.EnsureProjectSectionContainsFiles(newLines, 3, filePaths);
+            newLines = this.EnsureProjectSectionContainsFiles(newLines, 2, filePaths);
             newLines.Add("\tEndProjectSection");
             newLines.Add("EndProject");
 

@@ -1,6 +1,8 @@
-﻿using Cake.CD.Command;
+﻿using Autofac;
+using Cake.CD.Command;
 using Cake.CD.Templating;
 using System;
+using System.Reflection;
 
 namespace Cake.CD.CommandLine
 {
@@ -10,7 +12,12 @@ namespace Cake.CD.CommandLine
         {
             try
             {
-                return GetCommandLineParser().Parse(args);
+                var container = ConfigureDependencyInjection();
+                using (var scope = container.BeginLifetimeScope())
+                {
+                    return scope.Resolve<CommandLineParser>().Parse(args);
+                }
+                    
             } catch (Exception e)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
@@ -18,16 +25,24 @@ namespace Cake.CD.CommandLine
                 Console.WriteLine();
                 Console.ForegroundColor = ConsoleColor.DarkRed;
                 Console.WriteLine("Stack trace: " + e.StackTrace);
+                if (e.InnerException != null)
+                {
+                    Console.WriteLine("Inner exception: " + e.InnerException);
+                }
                 Console.ResetColor();
                 return -1;
             }
         }
         
-        static CommandLineParser GetCommandLineParser()
+        static IContainer ConfigureDependencyInjection()
         {
-            var templateFileProvider = new TemplateFileProvider();
-            var commandRunner = new CommandRunner(templateFileProvider);
-            return new CommandLineParser(commandRunner);
+            var builder = new ContainerBuilder();
+            builder
+                .RegisterAssemblyTypes(typeof(Program).GetTypeInfo().Assembly)
+                .InstancePerLifetimeScope()
+                .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies)
+                .AsSelf();
+            return builder.Build();
         }
     }
 }

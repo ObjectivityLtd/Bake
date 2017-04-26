@@ -11,12 +11,15 @@ namespace Cake.CD.Command
 
         public UpdateVisualStudioSlnCommand UpdateVisualStudioSlnCommand { get; }
 
-        public CommandRunner(TemplateFileProvider templateFileProvider)
+        public InitCommand InitCommand { get; }
+
+        public CommandRunner(GenerateBuildScriptsCommand generateBuildScriptsCommand, GenerateDeployScriptsCommand generateDeployScriptsCommand,
+            UpdateVisualStudioSlnCommand updateVisualStudioSlnCommand, InitCommand initCommand)
         {
-            var visualStudioSlnHandler = new VisualStudioSlnHandler();
-            GenerateBuildScriptsCommand = new GenerateBuildScriptsCommand(templateFileProvider, this);
-            GenerateDeployScriptsCommand = new GenerateDeployScriptsCommand(templateFileProvider);
-            UpdateVisualStudioSlnCommand = new UpdateVisualStudioSlnCommand(visualStudioSlnHandler);
+            this.GenerateBuildScriptsCommand = generateBuildScriptsCommand;
+            this.GenerateDeployScriptsCommand = generateDeployScriptsCommand;
+            this.UpdateVisualStudioSlnCommand = updateVisualStudioSlnCommand;
+            this.InitCommand = initCommand;
         }
 
     }

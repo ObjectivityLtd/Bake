@@ -8,21 +8,16 @@ namespace Cake.CD.Command
 
         private TemplateFileProvider templateFileProvider;
 
-        private CommandRunner commandRunner;
-
-        public GenerateBuildScriptsCommand(TemplateFileProvider templateFileProvider, CommandRunner commandRunner)
+        public GenerateBuildScriptsCommand(TemplateFileProvider templateFileProvider)
         {
             this.templateFileProvider = templateFileProvider;
-            this.commandRunner = commandRunner;
         }
 
-        public void Generate()
+        public List<string> Generate()
         {
             var filePaths = new List<string>() { "build\\build.ps1", "build\\build.cake" };
             templateFileProvider.WriteTemplateFiles(filePaths);
-
-            // TODO
-            commandRunner.UpdateVisualStudioSlnCommand.AddSolutionFolderToSlnFile("WebApplication1.sln", "Build", "Build", filePaths);
+            return filePaths;
         }
     }
 }

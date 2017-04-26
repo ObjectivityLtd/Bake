@@ -1,4 +1,5 @@
 using Cake.CD.Templating;
+using System.Collections.Generic;
 
 namespace Cake.CD.Command
 {
@@ -12,10 +13,11 @@ namespace Cake.CD.Command
             this.templateFileProvider = templateFileProvider;
         }
 
-        public void Generate()
+        public List<string> Generate()
         {
-            templateFileProvider.WriteTemplateFile("deploy/deploy.ps1");
-            templateFileProvider.WriteTemplateFile("deploy/deploy.cake");
+            var filePaths = new List<string>() { "deploy\\deploy.ps1", "deploy\\deploy.cake" };
+            templateFileProvider.WriteTemplateFiles(filePaths);
+            return filePaths;
         }
     }
 }

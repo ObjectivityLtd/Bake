@@ -36,8 +36,8 @@ namespace Cake.CD.CommandLine
                 cmd.ShowHelp();
                 return 2;
             });
-            
-            PrepareAddCommands();
+            PrepareInitCommand();
+            // PrepareAddCommands();
         }
 
         private bool IsRunningInCoreCli() {
@@ -51,6 +51,22 @@ namespace Cake.CD.CommandLine
             .Assembly
             .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
             .InformationalVersion;
+        }
+
+        private void PrepareInitCommand()
+        {
+            var scaffoldCommand = cmd.Command("init", config =>
+            {
+                config.FullName = "Cake.CD init build and deploy";
+                config.Description = "Initialize build and deploy template files in current directory";
+                var argSlnFilePath = config.Argument("[slnFile]", "Path to sln file, if empty sln will not be modified");
+                config.OnExecute(() =>
+                {
+                    commandRunner.InitCommand.Run(argSlnFilePath.Value);
+                    return 0;
+                });
+                config.HelpOption("-?|-h|--help");
+            });
         }
 
         private void PrepareAddCommands()
