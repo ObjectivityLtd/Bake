@@ -2,7 +2,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net452;netcoreapp1.0</TargetFrameworks>
+    <TargetFrameworks>net46;netcoreapp1.1</TargetFrameworks>
+    <PlatformTarget>AnyCpu</PlatformTarget>
     <AssemblyName>Cake.CD</AssemblyName>
     <Version>0.0.1</Version>
   </PropertyGroup>
@@ -10,15 +11,16 @@
     <AssemblyName>dotnet-cake</AssemblyName>
   </PropertyGroup>-->
   <ItemGroup>
-    <PackageReference Include="Cake.Common" Version="0.19.4" />
+    <PackageReference Include="Cake.Common" Version="0.19.5" />
     <PackageReference Include="Autofac" Version="4.5.0" />
     <PackageReference Include="Microsoft.Extensions.CommandLineUtils" Version="1.1.0">
       <PrivateAssets>All</PrivateAssets>
-    </PackageReference>  
+    </PackageReference>
     <PackageReference Include="Microsoft.Extensions.PlatformAbstractions" Version="1.1.0">
       <PrivateAssets>All</PrivateAssets>
-    </PackageReference>  
-    <PackageReference Include="Serilog" Version="2.4.0" />  
-    <PackageReference Include="Serilog.Sinks.Literate" Version="2.1.0" />  
+    </PackageReference>
+    <PackageReference Include="Serilog" Version="2.4.0" />
+    <PackageReference Include="Serilog.Sinks.Literate" Version="2.1.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="2.1.0" />
   </ItemGroup>
 </Project>

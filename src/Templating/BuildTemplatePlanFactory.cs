@@ -1,8 +1,8 @@
 ﻿using Cake.CD.MsBuild;
+using Cake.CD.Templating.Build;
 using Cake.Common.Solution;
 using Cake.Common.Solution.Project;
 using Serilog;
-using System.Linq;
 
 namespace Cake.CD.Templating
 {
@@ -13,29 +13,36 @@ namespace Cake.CD.Templating
 
         private ProjectParser projectParser;
 
-        private TaskTemplateFactory taskTemplateFactory;
+        private TaskScriptFactory taskScriptFactory;
 
-        public BuildTemplatePlanFactory(SolutionParser solutionParser, ProjectParser projectParser, TaskTemplateFactory taskTemplateFactory)
+        private TemplateFileProvider templateFileProvider;
+
+        private BuildCake buildCake;
+
+        public BuildTemplatePlanFactory(SolutionParser solutionParser, ProjectParser projectParser, TaskScriptFactory taskScriptFactory, 
+            TemplateFileProvider templateFileProvider, BuildCake buildCake)
         {
             this.solutionParser = solutionParser;
             this.projectParser = projectParser;
-            this.taskTemplateFactory = taskTemplateFactory;
+            this.taskScriptFactory = taskScriptFactory;
+            this.templateFileProvider = templateFileProvider;
+            this.buildCake = buildCake;
         }
 
         public TemplatePlan CreateTemplatePlanFromSln(string slnFilePath)
         {
-            TemplatePlan templatePlan = new TemplatePlan();
-            templatePlan = ParseSolution(slnFilePath, templatePlan);
+            TemplatePlan templatePlan = this.CreateBaseTemplatePlan();
+            this.ParseSolution(slnFilePath);
             return templatePlan;
         }
 
         public TemplatePlan CreateDefaultTemplatePlan()
         {
-            TemplatePlan templatePlan = new TemplatePlan();
+            TemplatePlan templatePlan = this.CreateBaseTemplatePlan();
             return templatePlan;
         }
 
-        private TemplatePlan ParseSolution(string slnFilePath, TemplatePlan templatePlan)
+        private BuildCake ParseSolution(string slnFilePath)
         {
             Log.Information("Parsing solution {SlnFile}.", slnFilePath);
             var solutionParserResult = solutionParser.Parse(new Core.IO.FilePath(slnFilePath));
@@ -45,11 +52,20 @@ namespace Cake.CD.Templating
                 {
                     continue;
                 }
-                ICakeTaskTemplate taskTemplate = taskTemplateFactory.CreateTaskTemplate(project);
-                templatePlan.AddTaskTemplate(taskTemplate);
+                IScriptTask taskScript = taskScriptFactory.CreateTaskTemplate(project);
+                buildCake.AddTaskScript(taskScript);
 
             }
+            return buildCake;
+        }
+
+        private TemplatePlan CreateBaseTemplatePlan()
+        {
+            TemplatePlan templatePlan = new TemplatePlan();
+            templatePlan.AddStep(new CopyFileStep(templateFileProvider, "build\\build.ps1", "build\\build.ps1"));
+            templatePlan.AddStep(buildCake);
             return templatePlan;
         }
+
     }
 }

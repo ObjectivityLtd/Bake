@@ -14,7 +14,7 @@
     <developmentDependency>true</developmentDependency>
   </metadata>
   <files>
-    <file src="..\src\bin\Release\net452\**" />
+    <file src="..\src\bin\Release\net46\**" />
     <file src="..\templates\**" target="templates" />
   </files>
 </package>

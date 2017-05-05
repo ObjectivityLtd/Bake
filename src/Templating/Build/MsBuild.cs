@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Cake.CD.Scripting;
 
-namespace Cake.CD.Templating
+namespace Cake.CD.Templating.Build
 {
-    public class MsBuildTaskTemplate : ICakeTaskTemplate
+    public class MsBuildTask : IScriptTask
     {
 
         public enum MsBuildTaskType
@@ -21,13 +17,12 @@ namespace Cake.CD.Templating
 
         public string DestinationFile { get; private set; }
 
-        public MsBuildTaskTemplate(MsBuildTaskType TaskType, string SourceFile, string DestinationFile)
+        public MsBuildTask(MsBuildTaskType TaskType, string SourceFile, string DestinationFile)
         {
             this.TaskType = TaskType;
             this.SourceFile = SourceFile;
             this.DestinationFile = DestinationFile;
         }
-
 
     }
 }

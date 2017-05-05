@@ -12,12 +12,12 @@ namespace Cake.CD.Command
 
         public void Run(string slnFilePath)
         {
-            var buildScriptPaths = commandRunner.GenerateBuildScriptsCommand.Generate(slnFilePath);
-            var deployScriptPaths = commandRunner.GenerateDeployScriptsCommand.Generate();
+            var buildResult = commandRunner.GenerateBuildScriptsCommand.Generate(slnFilePath);
+            //var deployScriptPaths = commandRunner.GenerateDeployScriptsCommand.Generate();
             if (!String.IsNullOrWhiteSpace(slnFilePath))
             {
-                commandRunner.UpdateVisualStudioSlnCommand.AddSolutionFolderToSlnFile(slnFilePath, "Build", "Build", buildScriptPaths);
-                commandRunner.UpdateVisualStudioSlnCommand.AddSolutionFolderToSlnFile(slnFilePath, "Deploy", "Deploy", deployScriptPaths);
+                commandRunner.UpdateVisualStudioSlnCommand.AddSolutionFolderToSlnFile(slnFilePath, "Build", "Build", buildResult.GetAddedFiles());
+                //commandRunner.UpdateVisualStudioSlnCommand.AddSolutionFolderToSlnFile(slnFilePath, "Deploy", "Deploy", deployScriptPaths);
             }
 
         }

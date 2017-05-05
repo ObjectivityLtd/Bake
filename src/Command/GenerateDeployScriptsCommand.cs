@@ -13,11 +13,11 @@ namespace Cake.CD.Command
             this.templateFileProvider = templateFileProvider;
         }
 
-        public List<string> Generate()
+        public TemplatePlanResult Generate()
         {
             var filePaths = new List<string>() { "deploy\\deploy.ps1", "deploy\\deploy.cake" };
-            templateFileProvider.WriteTemplateFiles(filePaths);
-            return filePaths;
+            // TODO
+            return null;
         }
     }
 }

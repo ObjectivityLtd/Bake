@@ -1,4 +1,5 @@
-﻿using Cake.Common.Solution;
+﻿using Cake.CD.Scripting;
+using Cake.Common.Solution;
 using Cake.Common.Solution.Project;
 using Cake.Core;
 using Cake.Core.Composition;
@@ -20,6 +21,8 @@ namespace Cake.CD.Cake
             registrar.RegisterType<CakeLog>().As<ICakeLog>().Singleton();
             registrar.RegisterType<ProjectParser>().Singleton().AsSelf();
             registrar.RegisterType<SolutionParser>().Singleton().AsSelf();
+
+            registrar.RegisterType<RoslynScriptEvaluator>().As<IScriptEvaluator>().Singleton();
         }
     }
 }

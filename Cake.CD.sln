@@ -17,8 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Templates", "Templates", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{63F507AA-E576-4A8F-8B8B-F5A0F1F7263E}"
 	ProjectSection(SolutionItems) = preProject
-		templates\build\build.cake = templates\build\build.cake
 		templates\build\build.ps1 = templates\build\build.ps1
+		templates\build\BuildCake.csx = templates\build\BuildCake.csx
 		templates\build\EntityFrameworkMigrate.csx = templates\build\EntityFrameworkMigrate.csx
 		templates\build\GulpProject.csx = templates\build\GulpProject.csx
 		templates\build\msbuild.csx = templates\build\msbuild.csx

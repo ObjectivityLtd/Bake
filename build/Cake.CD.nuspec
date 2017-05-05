@@ -13,9 +13,9 @@
     <tags>build deploy cake CI CD continuous integration delivery cli</tags>
     <developmentDependency>true</developmentDependency>
     <dependencies>
-      <group targetFramework=".NETCoreApp1.0">
+      <group targetFramework=".NETCoreApp1.1">
         <dependency id="Autofac" version="4.5.0" />
-        <dependency id="Cake.Common" version="0.19.4" />
+        <dependency id="Cake.Common" version="0.19.5" />
         <dependency id="Microsoft.Extensions.CommandLineUtils" version="1.1.0" />
         <dependency id="Microsoft.Extensions.PlatformAbstractions" version="1.1.0" />
       </group>  
@@ -23,7 +23,7 @@
   </metadata>
   <files>
     <file src="..\src\bin\Release\netc*\**" target="lib" />
-    <file src="..\src\bin\Release\net452\**" target="tools" />
+    <file src="..\src\bin\Release\net46\**" target="tools" />
     <file src="..\templates\**" target="templates" />
   </files>
 </package>

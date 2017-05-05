@@ -14,8 +14,8 @@ namespace Cake.CD.CommandLine
     {
         static int Main(string[] args)
         {
-            try
-            {
+            //try
+            //{
                 ConfigureLogger();
                 var container = ConfigureCakeCDContainer();
                 using (var scope = container.BeginLifetimeScope())
@@ -23,11 +23,11 @@ namespace Cake.CD.CommandLine
                     return scope.Resolve<CommandLineParser>().Parse(args);
                 }
                     
-            } catch (Exception e)
+            /*} catch (Exception e)
             {
                 Log.Error(e, "");
                 return -1;
-            }
+            }*/
         }
         
         private static IContainer ConfigureCakeCDContainer()

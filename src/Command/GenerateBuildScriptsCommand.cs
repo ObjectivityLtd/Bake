@@ -1,7 +1,5 @@
 using Cake.CD.Templating;
-using Cake.Common.Solution;
-using Cake.Common.Solution.Project;
-using Serilog;
+using Cake.CD.Templating.Build;
 using System;
 using System.Collections.Generic;
 
@@ -20,14 +18,12 @@ namespace Cake.CD.Command
             this.templatePlanFactory = templatePlanFactory;
         }
 
-        public List<string> Generate(string slnFilePath)
+        public TemplatePlanResult Generate(string slnFilePath)
         {
             TemplatePlan templatePlan = !String.IsNullOrWhiteSpace(slnFilePath) ? templatePlanFactory.CreateTemplatePlanFromSln(slnFilePath) : 
                 templatePlanFactory.CreateDefaultTemplatePlan();
 
-            var filePaths = new List<string>() { "build\\build.ps1", "build\\build.cake" };
-            templateFileProvider.WriteTemplateFiles(filePaths);
-            return filePaths;
+            return templatePlan.Execute();
         }
 
     }

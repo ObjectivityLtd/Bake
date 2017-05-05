@@ -1,23 +1,34 @@
-﻿using System.Collections.Generic;
+﻿using Serilog;
+using System.Collections.Generic;
 
 namespace Cake.CD.Templating
 {
     public class TemplatePlan
     {
 
-        public List<ICakeTaskTemplate> TaskTemplates { get; private set; }
+        private List<ITemplatePlanStep> steps;
 
         public TemplatePlan()
         {
-            this.TaskTemplates = new List<ICakeTaskTemplate>();
+            this.steps = new List<ITemplatePlanStep>();
         }
 
-        public void AddTaskTemplate(ICakeTaskTemplate taskTemplate)
+        public TemplatePlan AddStep(ITemplatePlanStep step)
         {
-            if (taskTemplate != null)
+            this.steps.Add(step);
+            return this;
+        }
+
+        public TemplatePlanResult Execute()
+        {
+            var stepResults = new List<TemplatePlanStepResult>();
+            foreach (var step in steps)
             {
-                this.TaskTemplates.Add(taskTemplate);
+                Log.Information("Executing step {Step}.", step);
+                var stepResult = step.Execute();
+                stepResults.Add(stepResult);
             }
+            return new TemplatePlanResult(stepResults);
         }
 
     }
