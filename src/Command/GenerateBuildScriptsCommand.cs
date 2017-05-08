@@ -1,7 +1,6 @@
 using Cake.CD.Templating;
-using Cake.CD.Templating.Build;
+using Cake.Core.IO;
 using System;
-using System.Collections.Generic;
 
 namespace Cake.CD.Command
 {
@@ -18,9 +17,9 @@ namespace Cake.CD.Command
             this.templatePlanFactory = templatePlanFactory;
         }
 
-        public TemplatePlanResult Generate(string slnFilePath)
+        public TemplatePlanResult Generate(FilePath slnFilePath)
         {
-            TemplatePlan templatePlan = !String.IsNullOrWhiteSpace(slnFilePath) ? templatePlanFactory.CreateTemplatePlanFromSln(slnFilePath) : 
+            TemplatePlan templatePlan = slnFilePath != null ? templatePlanFactory.CreateTemplatePlanFromSln(slnFilePath) : 
                 templatePlanFactory.CreateDefaultTemplatePlan();
 
             return templatePlan.Execute();

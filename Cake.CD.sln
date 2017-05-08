@@ -18,10 +18,12 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{63F507AA-E576-4A8F-8B8B-F5A0F1F7263E}"
 	ProjectSection(SolutionItems) = preProject
 		templates\build\build.ps1 = templates\build\build.ps1
-		templates\build\BuildCake.csx = templates\build\BuildCake.csx
+		templates\build\BuildCake_body.csx = templates\build\BuildCake_body.csx
+		templates\build\BuildCake_header.csx = templates\build\BuildCake_header.csx
 		templates\build\EntityFrameworkMigrate.csx = templates\build\EntityFrameworkMigrate.csx
 		templates\build\GulpProject.csx = templates\build\GulpProject.csx
-		templates\build\msbuild.csx = templates\build\msbuild.csx
+		templates\build\MsBuild_body.csx = templates\build\MsBuild_body.csx
+		templates\build\MsBuild_header.csx = templates\build\MsBuild_header.csx
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deploy", "Deploy", "{46733AE3-7578-4A9E-A16C-FCAF0D9E9C92}"

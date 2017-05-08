@@ -1,7 +1,9 @@
 ﻿using Cake.CD.MsBuild;
-using Cake.CD.Templating.Build;
+using Cake.CD.Templating.Steps;
+using Cake.CD.Templating.Steps.Build;
 using Cake.Common.Solution;
 using Cake.Common.Solution.Project;
+using Cake.Core.IO;
 using Serilog;
 
 namespace Cake.CD.Templating
@@ -13,24 +15,25 @@ namespace Cake.CD.Templating
 
         private ProjectParser projectParser;
 
-        private TaskScriptFactory taskScriptFactory;
+        private ScriptTaskFactory scriptTaskFactory;
 
         private TemplateFileProvider templateFileProvider;
 
         private BuildCake buildCake;
 
-        public BuildTemplatePlanFactory(SolutionParser solutionParser, ProjectParser projectParser, TaskScriptFactory taskScriptFactory, 
+        public BuildTemplatePlanFactory(SolutionParser solutionParser, ProjectParser projectParser, ScriptTaskFactory scriptTaskFactory, 
             TemplateFileProvider templateFileProvider, BuildCake buildCake)
         {
             this.solutionParser = solutionParser;
             this.projectParser = projectParser;
-            this.taskScriptFactory = taskScriptFactory;
+            this.scriptTaskFactory = scriptTaskFactory;
             this.templateFileProvider = templateFileProvider;
             this.buildCake = buildCake;
         }
 
-        public TemplatePlan CreateTemplatePlanFromSln(string slnFilePath)
+        public TemplatePlan CreateTemplatePlanFromSln(FilePath slnFilePath)
         {
+            Log.Information("Creating templates basing on solution file {SlnFilePath}.", slnFilePath);
             TemplatePlan templatePlan = this.CreateBaseTemplatePlan();
             this.ParseSolution(slnFilePath);
             return templatePlan;
@@ -38,23 +41,26 @@ namespace Cake.CD.Templating
 
         public TemplatePlan CreateDefaultTemplatePlan()
         {
+            Log.Warning("No solution file provided - creating default templates.");
             TemplatePlan templatePlan = this.CreateBaseTemplatePlan();
             return templatePlan;
         }
 
-        private BuildCake ParseSolution(string slnFilePath)
+        private BuildCake ParseSolution(FilePath slnFilePath)
         {
             Log.Information("Parsing solution {SlnFile}.", slnFilePath);
-            var solutionParserResult = solutionParser.Parse(new Core.IO.FilePath(slnFilePath));
+            var solutionParserResult = solutionParser.Parse(slnFilePath);
             foreach (var project in solutionParserResult.Projects)
             {
                 if (project.Type == null || !MsBuildGuids.IsSupportedSlnTypeIdentifier(project.Type))
                 {
                     continue;
                 }
-                IScriptTask taskScript = taskScriptFactory.CreateTaskTemplate(project);
-                buildCake.AddTaskScript(taskScript);
-
+                IScriptTask scriptTask = scriptTaskFactory.CreateTaskTemplate(project);
+                if (scriptTask != null)
+                {
+                    buildCake.AddScriptTask(scriptTask);
+                }
             }
             return buildCake;
         }

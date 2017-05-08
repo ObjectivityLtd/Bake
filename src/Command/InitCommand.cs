@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Cake.Core.IO;
+using System;
+using System.Linq;
 
 namespace Cake.CD.Command
 {
@@ -10,13 +12,14 @@ namespace Cake.CD.Command
         {
         }
 
-        public void Run(string slnFilePath)
+        public void Run(FilePath slnFilePath)
         {
             var buildResult = commandRunner.GenerateBuildScriptsCommand.Generate(slnFilePath);
             //var deployScriptPaths = commandRunner.GenerateDeployScriptsCommand.Generate();
-            if (!String.IsNullOrWhiteSpace(slnFilePath))
-            {
-                commandRunner.UpdateVisualStudioSlnCommand.AddSolutionFolderToSlnFile(slnFilePath, "Build", "Build", buildResult.GetAddedFiles());
+            if (slnFilePath != null)
+            { 
+                var relativePaths = buildResult.GetAddedFiles().Select(path => slnFilePath.GetRelativePath(path).FullPath).ToList();
+                commandRunner.UpdateVisualStudioSlnCommand.AddSolutionFolderToSlnFile(slnFilePath.FullPath, "Build", "Build", relativePaths);
                 //commandRunner.UpdateVisualStudioSlnCommand.AddSolutionFolderToSlnFile(slnFilePath, "Deploy", "Deploy", deployScriptPaths);
             }
 

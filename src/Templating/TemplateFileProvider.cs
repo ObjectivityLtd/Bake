@@ -7,16 +7,22 @@ namespace Cake.CD.Templating
     public class TemplateFileProvider
     {
 
-        public string GetFileContents(string filePath)
+        public string GetOptionalFileContents(string filePath)
         {
-            var resolvedFilePath = this.GetPathToTemplateFile(filePath);
+            var resolvedFilePath = this.GetPathToTemplateFile(filePath, true);
+            return resolvedFilePath == null ? null : File.ReadAllText(resolvedFilePath);
+        }
+
+        public string GetMandatoryFileContents(string filePath)
+        {
+            var resolvedFilePath = this.GetPathToTemplateFile(filePath, false);
             return File.ReadAllText(resolvedFilePath);
         }
 
-        private string GetPathToTemplateFile(string filePath)
+        private string GetPathToTemplateFile(string filePath, bool optional)
         {
             var assemblyLocation = Path.GetDirectoryName(typeof(TemplateFileProvider).GetTypeInfo().Assembly.Location);
-            var srcLocation = "templates/" + filePath;
+            var srcLocation = "templates\\" + filePath;
             for (int i = 0; i < 5; i++)
             {
                 var fullSrcLocation = Path.GetFullPath(Path.Combine(assemblyLocation, srcLocation));
@@ -26,8 +32,12 @@ namespace Cake.CD.Templating
                 }
                 srcLocation = "../" + srcLocation;
             }
-            throw new InvalidOperationException(
-                String.Format("Cannot find template file 'templates/{0}' at '{1}' or its parent directories.", filePath, assemblyLocation));
+            if (!optional)
+            {
+                throw new InvalidOperationException(
+                    String.Format("Cannot find template file 'templates/{0}' at '{1}' or its parent directories.", filePath, assemblyLocation));
+            }
+            return null;
         }
     }
 }

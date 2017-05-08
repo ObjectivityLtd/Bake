@@ -1,6 +1,7 @@
 using Cake.CD.Command;
 using Microsoft.Extensions.CommandLineUtils;
 using Microsoft.Extensions.PlatformAbstractions;
+using System.IO;
 using System.Reflection;
 
 namespace Cake.CD.CommandLine
@@ -62,7 +63,8 @@ namespace Cake.CD.CommandLine
                 var argSlnFilePath = config.Argument("[slnFile]", "Path to sln file, if empty sln will not be modified");
                 config.OnExecute(() =>
                 {
-                    commandRunner.InitCommand.Run(argSlnFilePath.Value);
+                    var slnFilePath = argSlnFilePath.Value == null ? null : Path.Combine(Directory.GetCurrentDirectory(), argSlnFilePath.Value);
+                    commandRunner.InitCommand.Run(slnFilePath);
                     return 0;
                 });
                 config.HelpOption("-?|-h|--help");

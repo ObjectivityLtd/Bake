@@ -1,4 +1,5 @@
-﻿using Serilog;
+﻿using Cake.CD.Templating.Steps;
+using Serilog;
 using System.Collections.Generic;
 
 namespace Cake.CD.Templating

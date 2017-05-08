@@ -1,4 +1,5 @@
 ﻿using Cake.CD.Templating;
+using Cake.Core.IO;
 using System.Collections.Generic;
 
 namespace Cake.CD.Command

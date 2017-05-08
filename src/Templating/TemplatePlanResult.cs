@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Cake.CD.Templating.Steps;
+using Cake.Core.IO;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Cake.CD.Templating
@@ -12,7 +14,7 @@ namespace Cake.CD.Templating
             this.stepResults = stepResults;
         }
 
-        public List<string> GetAddedFiles()
+        public List<FilePath> GetAddedFiles()
         {
             return stepResults.SelectMany(stepResult => stepResult.FilesAdded).ToList();
         }

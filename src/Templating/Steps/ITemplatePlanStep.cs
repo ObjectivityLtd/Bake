@@ -1,4 +1,4 @@
-﻿namespace Cake.CD.Templating
+﻿namespace Cake.CD.Templating.Steps
 {
     public interface ITemplatePlanStep
     {

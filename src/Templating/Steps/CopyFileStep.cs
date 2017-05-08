@@ -1,7 +1,7 @@
 ﻿using Serilog;
 using System.IO;
 
-namespace Cake.CD.Templating
+namespace Cake.CD.Templating.Steps
 {
     public class CopyFileStep : ITemplatePlanStep
     {
@@ -11,7 +11,7 @@ namespace Cake.CD.Templating
 
         public CopyFileStep(TemplateFileProvider templateFileProvider, string srcPath, string dstPath)
         {
-            this.contents = templateFileProvider.GetFileContents(srcPath);
+            this.contents = templateFileProvider.GetMandatoryFileContents(srcPath);
             this.dstPath = dstPath;
         }
 
