@@ -1,4 +1,5 @@
-﻿using Cake.Common.Solution;
+﻿using Cake.CD.Logging;
+using Cake.Common.Solution;
 using Cake.Core.IO;
 using Serilog;
 using System;
@@ -6,16 +7,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Cake.CD.Logging;
-using Serilog.Context;
 
-namespace Cake.CD.Templating
+namespace Cake.CD.MsBuild
 {
     // based on Cake.Common.Solution.SolutionParser
     public class SolutionExtender
     {
 
-        public void AddSolutionFolderToSlnFile(string slnFilePath, string solutionFolderName, string solutionFolderPath, List<string> filePaths)
+        public void AddSolutionFolderToSlnFile(string slnFilePath, string solutionFolderName, string solutionFolderPath, IEnumerable<string> filePaths)
         {
             var lines = ReadSolutionFile(slnFilePath);
             LogHelper.IncreaseIndent();
@@ -34,13 +33,13 @@ namespace Cake.CD.Templating
         {
             if (!File.Exists(slnFilePath))
             {
-                throw new InvalidOperationException(String.Format("Solution file '{0}' does not exist.", System.IO.Path.GetFullPath(slnFilePath)));
+                throw new InvalidOperationException($"Solution file '{System.IO.Path.GetFullPath(slnFilePath)}' does not exist.");
             }
             Log.Information("Adding entries to solution file {SlnFile}.", slnFilePath);
             return File.ReadAllLines(slnFilePath, Encoding.UTF8).ToList();
         }  
 
-        private List<string> EnsureSolutionContainsFolderWithFiles(List<string> lines, string slnFilePath, string solutionFolderName, string solutionFolderPath, List<string> filePaths)
+        private IEnumerable<string> EnsureSolutionContainsFolderWithFiles(List<string> lines, string slnFilePath, string solutionFolderName, string solutionFolderPath, IEnumerable<string> filePaths)
         {
             int lastProjectLine = -1;
             int i = -1;
@@ -67,7 +66,7 @@ namespace Cake.CD.Templating
             return this.AddNewProjectSection(lines, lastProjectLine, solutionFolderName, solutionFolderPath, filePaths);
         }
 
-        private List<string> AddNewProjectSection(List<string> lines, int lastProjectLine, string solutionFolderName, string solutionFolderPath, List<string> filePaths)
+        private IEnumerable<string> AddNewProjectSection(List<string> lines, int lastProjectLine, string solutionFolderName, string solutionFolderPath, IEnumerable<string> filePaths)
         {
             var newLines = new List<string>();
             Log.Information("Adding solution folder {SolutionFolder}.", solutionFolderName);
@@ -84,7 +83,7 @@ namespace Cake.CD.Templating
 
         }
 
-        private List<string> EnsureProjectSectionContainsFiles(List<string> lines, int startLine, List<string> filePaths)
+        private List<string> EnsureProjectSectionContainsFiles(List<string> lines, int startLine, IEnumerable<string> filePaths)
         {
             var filePathsToAdd = new List<string>(filePaths);
             int endProjectIndex = startLine;
@@ -108,6 +107,7 @@ namespace Cake.CD.Templating
             {
                 Log.Information("Adding file {File} to solution folder.", filePath);
             }
+            // TODO: first {0} should not be relative to directory structure
             filePathsToAdd = filePathsToAdd.Select(path => String.Format("\t\t{0} = {0}", path)).ToList();
             var result = new List<string>(lines);
             result.InsertRange(endProjectIndex, filePathsToAdd);
@@ -118,9 +118,10 @@ namespace Cake.CD.Templating
         {
             if (!StringComparer.OrdinalIgnoreCase.Equals(solutionFolderPath, currentSolutionFolderPath))
             {
-                throw new InvalidOperationException(String.Format(
-                    "Solution '{0}' already contains solution folder named '{1}' with path '{2}' (expecting path '{3}')",
-                    slnFilePath, solutionFolderName, currentSolutionFolderPath, solutionFolderPath));
+                throw new InvalidOperationException(
+                    $"Solution '{slnFilePath}' already contains solution folder named " +
+                    $"'{solutionFolderName}' with path '{currentSolutionFolderPath}' " +
+                    $"(expecting path '{solutionFolderPath}')");
             }
         }
 

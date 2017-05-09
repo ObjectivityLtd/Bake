@@ -16,8 +16,8 @@ namespace Cake.CD.CommandLine
         {
             //try
             //{
-                ConfigureLogger();
-                var container = ConfigureCakeCDContainer();
+                Config.ConfigureLogger();
+                var container = Config.ConfigureAutofacContainer();
                 using (var scope = container.BeginLifetimeScope())
                 {
                     return scope.Resolve<CommandLineParser>().Parse(args);
@@ -28,35 +28,6 @@ namespace Cake.CD.CommandLine
                 Log.Error(e, "");
                 return -1;
             }*/
-        }
-        
-        private static IContainer ConfigureCakeCDContainer()
-        {
-            var builder = new ContainerBuilder();
-            builder
-                .RegisterAssemblyTypes(typeof(Program).GetTypeInfo().Assembly)
-                .SingleInstance()
-                .PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies)
-                .AsSelf();
-
-            AddCakeCoreModules(builder);
-            return builder.Build();
-        }
-
-        private static void AddCakeCoreModules(ContainerBuilder containerBuilder)
-        {
-            var cakeRegistrar = new ContainerRegistrar(containerBuilder);
-            cakeRegistrar.RegisterModule(new CoreModule());
-            cakeRegistrar.RegisterModule(new CakeCDModule());
-        }
-
-        private static void ConfigureLogger()
-        {
-            Log.Logger = new LoggerConfiguration()
-               .MinimumLevel.Debug()
-               .Enrich.FromLogContext()
-               .WriteTo.LiterateConsole(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Indent}{Message}{NewLine}{Exception}")
-               .CreateLogger();
         }
     }
 }

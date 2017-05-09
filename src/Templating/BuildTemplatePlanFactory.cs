@@ -1,6 +1,8 @@
-﻿using Cake.CD.Command;
+﻿using System.Collections.Generic;
+using Cake.CD.Command;
 using Cake.CD.Logging;
 using Cake.CD.MsBuild;
+using Cake.CD.Templating.ScriptTaskFactories;
 using Cake.CD.Templating.Steps;
 using Cake.CD.Templating.Steps.Build;
 using Cake.Common.Solution;
@@ -18,25 +20,25 @@ namespace Cake.CD.Templating
 
         private ProjectParser projectParser;
 
-        private ScriptTaskFactory scriptTaskFactory;
+        private IEnumerable<IScriptTaskFactory> scriptTaskFactories;
 
         private TemplateFileProvider templateFileProvider;
 
         private ScriptTaskEvaluator scriptTaskEvaluator;
 
-        public BuildTemplatePlanFactory(SolutionParser solutionParser, ProjectParser projectParser, ScriptTaskFactory scriptTaskFactory, 
+        public BuildTemplatePlanFactory(SolutionParser solutionParser, ProjectParser projectParser, IEnumerable<IScriptTaskFactory> scriptTaskFactories,
             TemplateFileProvider templateFileProvider, ScriptTaskEvaluator scriptTaskEvaluator)
         {
             this.solutionParser = solutionParser;
             this.projectParser = projectParser;
-            this.scriptTaskFactory = scriptTaskFactory;
+            this.scriptTaskFactories = scriptTaskFactories;
             this.templateFileProvider = templateFileProvider;
             this.scriptTaskEvaluator = scriptTaskEvaluator;
         }
 
         public TemplatePlan CreateTemplatePlan(InitOptions initOptions)
         {
-            var buildCakeTask = new BuildCakeTask(scriptTaskEvaluator, initOptions);
+            var buildCakeTask = new BuildCake(scriptTaskEvaluator, initOptions);
             var templatePlan = this.CreateBaseTemplatePlan(buildCakeTask, initOptions.Overwrite);
             if (initOptions.SolutionFilePath == null)
             {
@@ -47,7 +49,7 @@ namespace Cake.CD.Templating
             return templatePlan;
         }
 
-        private BuildCakeTask ParseSolution(BuildCakeTask buildCakeTask, FilePath slnFilePath)
+        private BuildCake ParseSolution(BuildCake buildCakeTask, FilePath slnFilePath)
         {
             Log.Information("Parsing solution {SlnFile}.", slnFilePath);
             LogHelper.IncreaseIndent();
@@ -58,14 +60,14 @@ namespace Cake.CD.Templating
                 {
                     continue;
                 }
-                var scriptTasks = scriptTaskFactory.CreateTaskTemplate(project);
+                var scriptTasks = ParseProject(project);
                 buildCakeTask.AddScriptTasks(scriptTasks);
             }
             LogHelper.DecreaseIndent();
             return buildCakeTask;
         }
 
-        private TemplatePlan CreateBaseTemplatePlan(BuildCakeTask buildCakeTask, bool shouldOverwrite)
+        private TemplatePlan CreateBaseTemplatePlan(BuildCake buildCakeTask, bool shouldOverwrite)
         {
             TemplatePlan templatePlan = new TemplatePlan();
             templatePlan.AddStep(new CopyFileStep(templateFileProvider, "build\\build.ps1", "build\\build.ps1", shouldOverwrite));
@@ -73,5 +75,27 @@ namespace Cake.CD.Templating
             return templatePlan;
         }
 
+        private IEnumerable<IScriptTask> ParseProject(SolutionProject project)
+        {
+            Log.Information("Parsing project {ProjectFile}.", project.Path.FullPath);
+            LogHelper.IncreaseIndent();
+            var projectParserResult = projectParser.Parse(project.Path);
+            var result = CreateScriptTasks(project, projectParserResult);
+            LogHelper.DecreaseIndent();
+            return result;
+        }
+
+        private IEnumerable<IScriptTask> CreateScriptTasks(SolutionProject project, ProjectParserResult parserResult)
+        {
+            var result = new List<IScriptTask>();
+            foreach (var scriptTaskFactory in scriptTaskFactories)
+            {
+                if (scriptTaskFactory.IsApplicable(project, parserResult))
+                {
+                    result.AddRange(scriptTaskFactory.Create(project, parserResult));
+                }
+            }
+            return result;
+        }
     }
 }

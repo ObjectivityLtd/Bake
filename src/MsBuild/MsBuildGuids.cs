@@ -14,6 +14,8 @@ namespace Cake.CD.MsBuild
 
         public static readonly string MVC5 = "{349C5851-65DF-11DA-9384-00065B846F21}";
 
+        public static readonly string WebSite = "{E24C65DC-7377-472B-9ABA-BC803B73C61A}";
+
         public static bool IsSupportedSlnTypeIdentifier(string guid)
         {
             return Equals(guid, CSharp);
@@ -22,6 +24,11 @@ namespace Cake.CD.MsBuild
         public static bool IsWebApplication(string guid)
         {
             return Equals(guid, MVC4) || Equals(guid, MVC5);
+        }
+
+        public static bool IsWebSite(string guid)
+        {
+            return Equals(guid, WebSite);
         }
 
         private static bool Equals(string guid1, string guid2)

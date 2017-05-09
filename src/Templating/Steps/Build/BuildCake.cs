@@ -2,12 +2,13 @@
 using Serilog;
 using System.Collections.Generic;
 using System.IO;
+using Cake.CD.Logging;
 
 namespace Cake.CD.Templating.Steps.Build
 {
-    public class BuildCakeTask : IScriptTask, ITemplatePlanStep
+    public class BuildCake : ITemplatePlanStep, IScriptTask
     {
-        private readonly BuildScriptState scriptState;
+        private readonly CakeBuildScriptState scriptState;
 
         private readonly ScriptTaskEvaluator scriptTaskEvaluator;
 
@@ -15,14 +16,14 @@ namespace Cake.CD.Templating.Steps.Build
 
         public string Name => "build.cake";
 
-        public BuildCakeTask(ScriptTaskEvaluator scriptTaskEvaluator, InitOptions initOptions)
+        public BuildCake(ScriptTaskEvaluator scriptTaskEvaluator, InitOptions initOptions)
         {
             this.scriptTaskEvaluator = scriptTaskEvaluator;
             this.initOptions = initOptions;
-            this.scriptState = new BuildScriptState(scriptTaskEvaluator, "build", "bin");
+            this.scriptState = new CakeBuildScriptState(scriptTaskEvaluator, "build", "bin");
         }
 
-        public BuildCakeTask AddScriptTasks(IEnumerable<IScriptTask> scriptTasks)
+        public BuildCake AddScriptTasks(IEnumerable<IScriptTask> scriptTasks)
         {
             this.scriptState.AddScriptTasks(scriptTasks);
             return this;
@@ -30,7 +31,7 @@ namespace Cake.CD.Templating.Steps.Build
 
         public TemplatePlanStepResult Execute()
         {
-            var buildCakePath = scriptState.CakeScriptPath.CombineWithFilePath("build.cake").FullPath;
+            var buildCakePath = scriptState.BuildScriptPath.CombineWithFilePath("build.cake").FullPath;
             if (!initOptions.Overwrite && File.Exists(buildCakePath))
             {
                 Log.Warning("File {BuildCakePath} already exists. Skipping.", buildCakePath);
@@ -38,9 +39,11 @@ namespace Cake.CD.Templating.Steps.Build
             }
 
             Log.Information("Generating {Name}.", this.Name);
+            LogHelper.IncreaseIndent();
             var result = scriptTaskEvaluator.GenerateAllParts(this, scriptState);
             Log.Information("Saving result to {OutputPath}.", buildCakePath);
             File.WriteAllText(buildCakePath, result);
+            LogHelper.DecreaseIndent();
             return new TemplatePlanStepResult(buildCakePath);
         }
     }

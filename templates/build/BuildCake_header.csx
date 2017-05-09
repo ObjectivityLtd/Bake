@@ -13,7 +13,7 @@ var configuration = Argument(""configuration"", ""Release"");
 // GLOBAL VARIABLES
 /////////////////////////////////////////////////////////////////////////////// 
 
-var outputDir = Directory(""{CakeScriptPath.GetRelativePath(OutputPath).FullPath}"");
+var outputDir = Directory(""{BuildScriptPath.GetRelativePath(OutputPath).FullPath}"");
 
 ///////////////////////////////////////////////////////////////////////////////
 // SETUP / TEARDOWN

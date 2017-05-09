@@ -36,7 +36,7 @@ namespace Cake.CD.Templating
             if (!optional)
             {
                 throw new InvalidOperationException(
-                    String.Format("Cannot find template file 'templates/{0}' at '{1}' or its parent directories.", filePath, assemblyLocation));
+                    $"Cannot find template file 'templates/{filePath}' at '{assemblyLocation}' or its parent directories.");
             }
             return null;
         }

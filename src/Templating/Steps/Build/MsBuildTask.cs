@@ -11,7 +11,7 @@ namespace Cake.CD.Templating.Steps.Build
             ConsoleApplication
         }
 
-        public string Name => "Build" + this.SourceFile.GetFilenameWithoutExtension().FullPath;
+        public string Name => "Build " + this.SourceFile.GetFilenameWithoutExtension().FullPath;
 
         public MsBuildTaskType TaskType { get; private set; }
 

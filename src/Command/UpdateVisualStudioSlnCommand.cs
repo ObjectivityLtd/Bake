@@ -1,6 +1,7 @@
 ﻿using Cake.CD.Templating;
 using Cake.Core.IO;
 using System.Collections.Generic;
+using Cake.CD.MsBuild;
 
 namespace Cake.CD.Command
 {

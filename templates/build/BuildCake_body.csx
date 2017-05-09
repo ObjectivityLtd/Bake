@@ -24,7 +24,7 @@ Task(""Default"")
 
 foreach (var dependency in GetDependencyList())
 {
-    result += string.Format("    .IsDependentOn(\"{0}\")", dependency);
+    result += $"    .IsDependentOn(\"{dependency}\")";
 }
 
 result += $@";

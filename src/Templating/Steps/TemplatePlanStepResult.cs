@@ -6,7 +6,7 @@ namespace Cake.CD.Templating.Steps
     public class TemplatePlanStepResult
     {
 
-        public List<FilePath> FilesAdded { get; private set; }
+        public IEnumerable<FilePath> FilesAdded { get; private set; }
 
         public TemplatePlanStepResult()
         {
@@ -18,7 +18,7 @@ namespace Cake.CD.Templating.Steps
             
         }
 
-        public TemplatePlanStepResult(List<FilePath> filesAdded)
+        public TemplatePlanStepResult(IEnumerable<FilePath> filesAdded)
         {
             this.FilesAdded = filesAdded;
         }

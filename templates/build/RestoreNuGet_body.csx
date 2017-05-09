@@ -1,6 +1,6 @@
 var task = CurrentTask as RestoreNuGetTask;
 
-var solutionPath = CakeScriptPath.GetRelativePath(task.SourceFile).FullPath;
+var solutionPath = BuildScriptPath.GetRelativePath(task.SourceFile).FullPath;
 
 $@"
 Task(""{task.Name}"")

@@ -7,14 +7,14 @@ namespace Cake.CD.Templating
 {
     public class TemplatePlanResult
     {
-        private List<TemplatePlanStepResult> stepResults;
+        private IEnumerable<TemplatePlanStepResult> stepResults;
 
-        public TemplatePlanResult(List<TemplatePlanStepResult> stepResults)
+        public TemplatePlanResult(IEnumerable<TemplatePlanStepResult> stepResults)
         {
             this.stepResults = stepResults;
         }
 
-        public List<FilePath> GetAddedFiles()
+        public IEnumerable<FilePath> GetAddedFiles()
         {
             return stepResults.SelectMany(stepResult => stepResult.FilesAdded).ToList();
         }

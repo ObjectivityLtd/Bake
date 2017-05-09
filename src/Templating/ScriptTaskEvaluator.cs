@@ -1,4 +1,5 @@
 ﻿using Cake.CD.Scripting;
+using Serilog;
 
 namespace Cake.CD.Templating
 {
@@ -37,6 +38,7 @@ namespace Cake.CD.Templating
             try
             {
                 scriptState.CurrentTask = scriptTask;
+                Log.Information("Generating {ScriptTaskPart} of {ScriptTaskName}.", scriptTaskPart, scriptTask.Name);
                 return scriptEvaluator.Evaluate(scriptBody, scriptState);
             }
             finally

@@ -21,9 +21,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{63F507AA
 		templates\build\BuildCake_body.csx = templates\build\BuildCake_body.csx
 		templates\build\BuildCake_header.csx = templates\build\BuildCake_header.csx
 		templates\build\EntityFrameworkMigrate.csx = templates\build\EntityFrameworkMigrate.csx
-		templates\build\GulpProject.csx = templates\build\GulpProject.csx
+		templates\build\Gulp_body.csx = templates\build\Gulp_body.csx
+		templates\build\Gulp_header.csx = templates\build\Gulp_header.csx
 		templates\build\MsBuild_body.csx = templates\build\MsBuild_body.csx
-		templates\build\MsBuild_header.csx = templates\build\MsBuild_header.csx
 		templates\build\RestoreNuGet_body.csx = templates\build\RestoreNuGet_body.csx
 	EndProjectSection
 EndProject
