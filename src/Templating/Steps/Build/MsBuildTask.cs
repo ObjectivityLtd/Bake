@@ -7,17 +7,11 @@ namespace Cake.CD.Templating.Steps.Build
 
         public enum MsBuildTaskType
         {
-            WEB_APPLICATION,
-            CONSOLE_APPLICATION
+            WebApplication,
+            ConsoleApplication
         }
 
-        public string Name
-        {
-            get
-            {
-                return this.SourceFile.GetFilenameWithoutExtension().FullPath;
-            }
-        }
+        public string Name => "Build" + this.SourceFile.GetFilenameWithoutExtension().FullPath;
 
         public MsBuildTaskType TaskType { get; private set; }
 

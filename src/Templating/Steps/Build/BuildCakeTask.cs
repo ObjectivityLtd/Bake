@@ -1,5 +1,6 @@
 ﻿using Cake.CD.Command;
 using Serilog;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Cake.CD.Templating.Steps.Build
@@ -12,14 +13,8 @@ namespace Cake.CD.Templating.Steps.Build
 
         private readonly InitOptions initOptions;
 
-        public string Name
-        {
-            get
-            {
-                return "build.cake";
-            }
-        }
-       
+        public string Name => "build.cake";
+
         public BuildCakeTask(ScriptTaskEvaluator scriptTaskEvaluator, InitOptions initOptions)
         {
             this.scriptTaskEvaluator = scriptTaskEvaluator;
@@ -27,9 +22,9 @@ namespace Cake.CD.Templating.Steps.Build
             this.scriptState = new BuildScriptState(scriptTaskEvaluator, "build", "bin");
         }
 
-        public BuildCakeTask AddScriptTask(IScriptTask scriptTask)
+        public BuildCakeTask AddScriptTasks(IEnumerable<IScriptTask> scriptTasks)
         {
-            this.scriptState.AddScriptTask(scriptTask);
+            this.scriptState.AddScriptTasks(scriptTasks);
             return this;
         }
 
@@ -44,7 +39,7 @@ namespace Cake.CD.Templating.Steps.Build
 
             Log.Information("Generating {Name}.", this.Name);
             var result = scriptTaskEvaluator.GenerateAllParts(this, scriptState);
-            Log.Information("Saving result to {OutputPath}", buildCakePath);
+            Log.Information("Saving result to {OutputPath}.", buildCakePath);
             File.WriteAllText(buildCakePath, result);
             return new TemplatePlanStepResult(buildCakePath);
         }

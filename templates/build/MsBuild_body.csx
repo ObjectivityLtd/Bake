@@ -3,16 +3,8 @@ var task = CurrentTask as MsBuildTask;
 var solutionPath = CakeScriptPath.GetRelativePath(task.SourceFile).FullPath;
 
 $@"
-
-Task(""Restore Nuget - {task.Name}"")
-    .IsDependentOn(""Clean"")
-    .Does(() =>
-    {{
-        NuGetRestore(""{solutionPath}"");
-    }});
-
-Task(""Build - {task.Name}"")
-    .Description(""Builds solution {task.Name}"")
+Task(""{task.Name}"")
+    .Description(""Builds solution {task.SolutionName}"")
     .IsDependentOn(""Clean"")
     .Does(() =>
     {{

@@ -3,6 +3,7 @@ using Cake.CD.Templating;
 using Cake.Core.IO;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace Cake.CD.Templating.Steps.Build
@@ -19,7 +20,7 @@ namespace Cake.CD.Templating.Steps.Build
 
         public DirectoryPath OutputPath { get; private set; }
 
-        private ScriptTaskEvaluator scriptTaskEvaluator;
+        private readonly ScriptTaskEvaluator scriptTaskEvaluator;
 
         public BuildScriptState(ScriptTaskEvaluator scriptTaskEvaluator, string cakeScriptPath, string outputPath)
         {
@@ -30,9 +31,9 @@ namespace Cake.CD.Templating.Steps.Build
             this.OutputPath = this.BasePath.Combine(outputPath);
         }
 
-        public void AddScriptTask(IScriptTask scriptTask)
+        public void AddScriptTasks(IEnumerable<IScriptTask> scriptTasks)
         {
-            this.ScriptTasks.Add(scriptTask);
+            this.ScriptTasks.AddRange(scriptTasks);
         }
 
         public string GenerateParts(ScriptTaskPart scriptTaskPart)
@@ -48,17 +49,10 @@ namespace Cake.CD.Templating.Steps.Build
             return sb.ToString();
         }
 
-/*        public string GetRelativePath(string path)
+        public List<string> GetDependencyList()
         {
-            var filePath = new FilePath(path);
-            if (filePath.IsRelative)
-            {
-                return path;
-            } else
-            {
-                var baseDir = new DirectoryPath(this.BasePath);
-                return baseDir.GetRelativePath(filePath).FullPath;
-            }
-        }*/
+            return this.ScriptTasks.Select(task => task.Name).ToList();
+        }
+
     }
 }

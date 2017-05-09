@@ -54,7 +54,8 @@ namespace Cake.CD.CommandLine
         {
             Log.Logger = new LoggerConfiguration()
                .MinimumLevel.Debug()
-               .WriteTo.LiterateConsole()
+               .Enrich.FromLogContext()
+               .WriteTo.LiterateConsole(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Indent}{Message}{NewLine}{Exception}")
                .CreateLogger();
         }
     }

@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Cake.CD.Logging;
+using Serilog.Context;
 
 namespace Cake.CD.Templating
 {
@@ -16,16 +18,16 @@ namespace Cake.CD.Templating
         public void AddSolutionFolderToSlnFile(string slnFilePath, string solutionFolderName, string solutionFolderPath, List<string> filePaths)
         {
             var lines = ReadSolutionFile(slnFilePath);
+            LogHelper.IncreaseIndent();
             var newLines = EnsureSolutionContainsFolderWithFiles(lines, slnFilePath, solutionFolderName, solutionFolderPath, filePaths);
-
             if (newLines == lines)
             {
                 Log.Information("Files already present in the solution file - skipping.");
                 return;
             }
-
-            Log.Information("Saving solution file {SlnFile}", slnFilePath);
+            Log.Information("Saving solution file {SlnFile}.", slnFilePath);
             File.WriteAllLines(slnFilePath, newLines, Encoding.UTF8);
+            LogHelper.DecreaseIndent();
         }
 
         private List<string> ReadSolutionFile(string slnFilePath)
@@ -34,7 +36,7 @@ namespace Cake.CD.Templating
             {
                 throw new InvalidOperationException(String.Format("Solution file '{0}' does not exist.", System.IO.Path.GetFullPath(slnFilePath)));
             }
-            Log.Information("Parsing solution file {SlnFile}", slnFilePath);
+            Log.Information("Adding entries to solution file {SlnFile}.", slnFilePath);
             return File.ReadAllLines(slnFilePath, Encoding.UTF8).ToList();
         }  
 
@@ -104,7 +106,7 @@ namespace Cake.CD.Templating
             }
             foreach (var filePath in filePathsToAdd)
             {
-                Log.Information("Adding file {File} to solution folder", filePath);
+                Log.Information("Adding file {File} to solution folder.", filePath);
             }
             filePathsToAdd = filePathsToAdd.Select(path => String.Format("\t\t{0} = {0}", path)).ToList();
             var result = new List<string>(lines);

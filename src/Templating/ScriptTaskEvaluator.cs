@@ -20,9 +20,9 @@ namespace Cake.CD.Templating
         public string GenerateAllParts(IScriptTask scriptTask, IScriptState scriptState)
         {
             return string.Concat(
-                this.GeneratePart(scriptTask, ScriptTaskPart.HEADER, scriptState),
-                this.GeneratePart(scriptTask, ScriptTaskPart.BODY, scriptState),
-                this.GeneratePart(scriptTask, ScriptTaskPart.FOOTER, scriptState)
+                GeneratePart(scriptTask, ScriptTaskPart.HEADER, scriptState),
+                GeneratePart(scriptTask, ScriptTaskPart.BODY, scriptState),
+                GeneratePart(scriptTask, ScriptTaskPart.FOOTER, scriptState)
                 );
         }
 
@@ -37,7 +37,7 @@ namespace Cake.CD.Templating
             try
             {
                 scriptState.CurrentTask = scriptTask;
-                return this.scriptEvaluator.Evaluate(scriptBody, scriptState);
+                return scriptEvaluator.Evaluate(scriptBody, scriptState);
             }
             finally
             {

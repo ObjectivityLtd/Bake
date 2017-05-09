@@ -1,4 +1,5 @@
 ﻿using Cake.CD.Command;
+using Cake.CD.Logging;
 using Cake.CD.MsBuild;
 using Cake.CD.Templating.Steps;
 using Cake.CD.Templating.Steps.Build;
@@ -6,6 +7,7 @@ using Cake.Common.Solution;
 using Cake.Common.Solution.Project;
 using Cake.Core.IO;
 using Serilog;
+using Serilog.Context;
 
 namespace Cake.CD.Templating
 {
@@ -41,8 +43,6 @@ namespace Cake.CD.Templating
                 Log.Warning("No solution file provided - creating default templates.");
                 return templatePlan;
             }
-            Log.Information("Creating templates basing on solution file {SlnFilePath}.", initOptions.SolutionFilePath);
-            
             this.ParseSolution(buildCakeTask, initOptions.SolutionFilePath);
             return templatePlan;
         }
@@ -50,6 +50,7 @@ namespace Cake.CD.Templating
         private BuildCakeTask ParseSolution(BuildCakeTask buildCakeTask, FilePath slnFilePath)
         {
             Log.Information("Parsing solution {SlnFile}.", slnFilePath);
+            LogHelper.IncreaseIndent();
             var solutionParserResult = solutionParser.Parse(slnFilePath);
             foreach (var project in solutionParserResult.Projects)
             {
@@ -57,12 +58,10 @@ namespace Cake.CD.Templating
                 {
                     continue;
                 }
-                IScriptTask scriptTask = scriptTaskFactory.CreateTaskTemplate(project);
-                if (scriptTask != null)
-                {
-                    buildCakeTask.AddScriptTask(scriptTask);
-                }
+                var scriptTasks = scriptTaskFactory.CreateTaskTemplate(project);
+                buildCakeTask.AddScriptTasks(scriptTasks);
             }
+            LogHelper.DecreaseIndent();
             return buildCakeTask;
         }
 

@@ -24,6 +24,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{63F507AA
 		templates\build\GulpProject.csx = templates\build\GulpProject.csx
 		templates\build\MsBuild_body.csx = templates\build\MsBuild_body.csx
 		templates\build\MsBuild_header.csx = templates\build\MsBuild_header.csx
+		templates\build\RestoreNuGet_body.csx = templates\build\RestoreNuGet_body.csx
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deploy", "Deploy", "{46733AE3-7578-4A9E-A16C-FCAF0D9E9C92}"

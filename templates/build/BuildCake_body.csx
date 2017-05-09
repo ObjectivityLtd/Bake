@@ -19,7 +19,15 @@ result += $@"
 //////////////////////////////////////////////////////////////////////
 
 Task(""Default"")
-    .IsDependentOn(""Run-Unit-Tests"");
+    .IsDependentOn(""Clean"")
+";
+
+foreach (var dependency in GetDependencyList())
+{
+    result += string.Format("    .IsDependentOn(\"{0}\")", dependency);
+}
+
+result += $@";
 
 //////////////////////////////////////////////////////////////////////
 // EXECUTION

@@ -19,6 +19,7 @@ namespace Cake.CD.Scripting
                 .AddImports(scriptState.GetType().Namespace);
                 
             object result = null;
+            var currentTaskName = scriptState.CurrentTask == null ? "<none>" : scriptState.CurrentTask.Name;
             try
             {
                 CSharpScript.EvaluateAsync(scriptBody, options: options, globals: scriptState)
@@ -26,8 +27,11 @@ namespace Cake.CD.Scripting
                      .Wait();
             } catch (CompilationErrorException e)
             {
-                var currentTaskName = scriptState.CurrentTask == null ? "<none>" : scriptState.CurrentTask.Name;
                 Log.Error("Failed to compile script {Name}: {Diag}", currentTaskName, string.Join(Environment.NewLine, e.Diagnostics));
+                throw e;
+            } catch (Exception e)
+            {
+                Log.Error("Failed to execute script {Name}", currentTaskName, e);
                 throw e;
             }
             return result as string;

@@ -1,6 +1,8 @@
 ﻿using Cake.CD.Templating.Steps;
 using Serilog;
 using System.Collections.Generic;
+using Cake.CD.Logging;
+using Serilog.Context;
 
 namespace Cake.CD.Templating
 {
@@ -22,11 +24,14 @@ namespace Cake.CD.Templating
         public TemplatePlanResult Execute()
         {
             var stepResults = new List<TemplatePlanStepResult>();
+            var i = 1;
             foreach (var step in steps)
             {
-                Log.Information("Executing step {Step}.", step);
-                var stepResult = step.Execute();
-                stepResults.Add(stepResult);
+                Log.Information("Executing step {Step} ({i}/{total}).", step, i, steps.Count);
+                LogHelper.IncreaseIndent();
+                stepResults.Add(step.Execute());
+                LogHelper.DecreaseIndent();
+                i++;
             }
             return new TemplatePlanResult(stepResults);
         }
