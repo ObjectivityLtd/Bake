@@ -17,11 +17,9 @@ namespace Cake.CD.Command
             this.templatePlanFactory = templatePlanFactory;
         }
 
-        public TemplatePlanResult Generate(FilePath slnFilePath)
+        public TemplatePlanResult Generate(InitOptions initOptions)
         {
-            TemplatePlan templatePlan = slnFilePath != null ? templatePlanFactory.CreateTemplatePlanFromSln(slnFilePath) : 
-                templatePlanFactory.CreateDefaultTemplatePlan();
-
+            var templatePlan = templatePlanFactory.CreateTemplatePlan(initOptions);
             return templatePlan.Execute();
         }
 

@@ -12,14 +12,17 @@ namespace Cake.CD.Command
         {
         }
 
-        public void Run(FilePath slnFilePath)
+        public void Run(InitOptions initOptions)
         {
-            var buildResult = commandRunner.GenerateBuildScriptsCommand.Generate(slnFilePath);
+            var solutionFilePath = initOptions.SolutionFilePath;
+            var buildResult = commandRunner.GenerateBuildScriptsCommand.Generate(initOptions);
             //var deployScriptPaths = commandRunner.GenerateDeployScriptsCommand.Generate();
-            if (slnFilePath != null)
+            if (solutionFilePath != null && buildResult.GetAddedFiles().Any())
             { 
-                var relativePaths = buildResult.GetAddedFiles().Select(path => slnFilePath.GetRelativePath(path).FullPath).ToList();
-                commandRunner.UpdateVisualStudioSlnCommand.AddSolutionFolderToSlnFile(slnFilePath.FullPath, "Build", "Build", relativePaths);
+                var relativePaths = buildResult.GetAddedFiles()
+                    .Select(path => solutionFilePath.GetRelativePath(path).FullPath.Replace('/', '\\'))
+                    .ToList();
+                commandRunner.UpdateVisualStudioSlnCommand.AddSolutionFolderToSlnFile(solutionFilePath.FullPath, "Build", "Build", relativePaths);
                 //commandRunner.UpdateVisualStudioSlnCommand.AddSolutionFolderToSlnFile(slnFilePath, "Deploy", "Deploy", deployScriptPaths);
             }
 

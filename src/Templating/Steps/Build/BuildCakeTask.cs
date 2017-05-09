@@ -1,13 +1,16 @@
-﻿using Serilog;
+﻿using Cake.CD.Command;
+using Serilog;
 using System.IO;
 
 namespace Cake.CD.Templating.Steps.Build
 {
-    public class BuildCake : IScriptTask, ITemplatePlanStep
+    public class BuildCakeTask : IScriptTask, ITemplatePlanStep
     {
         private readonly BuildScriptState scriptState;
 
         private readonly ScriptTaskEvaluator scriptTaskEvaluator;
+
+        private readonly InitOptions initOptions;
 
         public string Name
         {
@@ -17,13 +20,14 @@ namespace Cake.CD.Templating.Steps.Build
             }
         }
        
-        public BuildCake(ScriptTaskEvaluator scriptTaskEvaluator)
+        public BuildCakeTask(ScriptTaskEvaluator scriptTaskEvaluator, InitOptions initOptions)
         {
             this.scriptTaskEvaluator = scriptTaskEvaluator;
+            this.initOptions = initOptions;
             this.scriptState = new BuildScriptState(scriptTaskEvaluator, "build", "bin");
         }
 
-        public BuildCake AddScriptTask(IScriptTask scriptTask)
+        public BuildCakeTask AddScriptTask(IScriptTask scriptTask)
         {
             this.scriptState.AddScriptTask(scriptTask);
             return this;
@@ -32,7 +36,7 @@ namespace Cake.CD.Templating.Steps.Build
         public TemplatePlanStepResult Execute()
         {
             var buildCakePath = scriptState.CakeScriptPath.CombineWithFilePath("build.cake").FullPath;
-            if (File.Exists(buildCakePath))
+            if (!initOptions.Overwrite && File.Exists(buildCakePath))
             {
                 Log.Warning("File {BuildCakePath} already exists. Skipping.", buildCakePath);
                 return new TemplatePlanStepResult();

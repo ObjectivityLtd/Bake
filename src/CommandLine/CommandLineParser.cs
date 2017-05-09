@@ -61,10 +61,16 @@ namespace Cake.CD.CommandLine
                 config.FullName = "Cake.CD init build and deploy";
                 config.Description = "Initialize build and deploy template files in current directory";
                 var argSlnFilePath = config.Argument("[slnFile]", "Path to sln file, if empty sln will not be modified");
+                var overwrite = config.Option("-o|--overwrite", "Overwrite .cake files if they already exist", CommandOptionType.NoValue);
                 config.OnExecute(() =>
                 {
-                    var slnFilePath = argSlnFilePath.Value == null ? null : Path.Combine(Directory.GetCurrentDirectory(), argSlnFilePath.Value);
-                    commandRunner.InitCommand.Run(slnFilePath);
+                    var initOptions = new InitOptions()
+                    {
+                        SolutionFilePath = argSlnFilePath.Value == null ? null : Path.Combine(Directory.GetCurrentDirectory(), argSlnFilePath.Value),
+                        Overwrite = overwrite.HasValue()
+                    };
+                    
+                    commandRunner.InitCommand.Run(initOptions);
                     return 0;
                 });
                 config.HelpOption("-?|-h|--help");

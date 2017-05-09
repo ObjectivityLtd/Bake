@@ -6,7 +6,6 @@ namespace Cake.CD.Templating
 {
     public class TemplatePlan
     {
-
         private List<ITemplatePlanStep> steps;
 
         public TemplatePlan()

@@ -1,3 +1,4 @@
+using Cake.Core.IO;
 using System;
 using System.IO;
 using System.Reflection;
@@ -7,25 +8,25 @@ namespace Cake.CD.Templating
     public class TemplateFileProvider
     {
 
-        public string GetOptionalFileContents(string filePath)
+        public string GetOptionalFileContents(FilePath filePath)
         {
             var resolvedFilePath = this.GetPathToTemplateFile(filePath, true);
             return resolvedFilePath == null ? null : File.ReadAllText(resolvedFilePath);
         }
 
-        public string GetMandatoryFileContents(string filePath)
+        public string GetMandatoryFileContents(FilePath filePath)
         {
             var resolvedFilePath = this.GetPathToTemplateFile(filePath, false);
             return File.ReadAllText(resolvedFilePath);
         }
 
-        private string GetPathToTemplateFile(string filePath, bool optional)
+        private string GetPathToTemplateFile(FilePath filePath, bool optional)
         {
-            var assemblyLocation = Path.GetDirectoryName(typeof(TemplateFileProvider).GetTypeInfo().Assembly.Location);
-            var srcLocation = "templates\\" + filePath;
+            var assemblyLocation = new FilePath((typeof(TemplateFileProvider).GetTypeInfo().Assembly.Location)).GetDirectory();
+            var srcLocation = new FilePath("templates/" + filePath);
             for (int i = 0; i < 5; i++)
             {
-                var fullSrcLocation = Path.GetFullPath(Path.Combine(assemblyLocation, srcLocation));
+                var fullSrcLocation = assemblyLocation.CombineWithFilePath(srcLocation).FullPath;
                 if (File.Exists(fullSrcLocation))
                 {
                     return fullSrcLocation;

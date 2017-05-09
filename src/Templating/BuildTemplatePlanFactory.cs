@@ -1,4 +1,5 @@
-﻿using Cake.CD.MsBuild;
+﻿using Cake.CD.Command;
+using Cake.CD.MsBuild;
 using Cake.CD.Templating.Steps;
 using Cake.CD.Templating.Steps.Build;
 using Cake.Common.Solution;
@@ -19,34 +20,34 @@ namespace Cake.CD.Templating
 
         private TemplateFileProvider templateFileProvider;
 
-        private BuildCake buildCake;
+        private ScriptTaskEvaluator scriptTaskEvaluator;
 
         public BuildTemplatePlanFactory(SolutionParser solutionParser, ProjectParser projectParser, ScriptTaskFactory scriptTaskFactory, 
-            TemplateFileProvider templateFileProvider, BuildCake buildCake)
+            TemplateFileProvider templateFileProvider, ScriptTaskEvaluator scriptTaskEvaluator)
         {
             this.solutionParser = solutionParser;
             this.projectParser = projectParser;
             this.scriptTaskFactory = scriptTaskFactory;
             this.templateFileProvider = templateFileProvider;
-            this.buildCake = buildCake;
+            this.scriptTaskEvaluator = scriptTaskEvaluator;
         }
 
-        public TemplatePlan CreateTemplatePlanFromSln(FilePath slnFilePath)
+        public TemplatePlan CreateTemplatePlan(InitOptions initOptions)
         {
-            Log.Information("Creating templates basing on solution file {SlnFilePath}.", slnFilePath);
-            TemplatePlan templatePlan = this.CreateBaseTemplatePlan();
-            this.ParseSolution(slnFilePath);
+            var buildCakeTask = new BuildCakeTask(scriptTaskEvaluator, initOptions);
+            var templatePlan = this.CreateBaseTemplatePlan(buildCakeTask, initOptions.Overwrite);
+            if (initOptions.SolutionFilePath == null)
+            {
+                Log.Warning("No solution file provided - creating default templates.");
+                return templatePlan;
+            }
+            Log.Information("Creating templates basing on solution file {SlnFilePath}.", initOptions.SolutionFilePath);
+            
+            this.ParseSolution(buildCakeTask, initOptions.SolutionFilePath);
             return templatePlan;
         }
 
-        public TemplatePlan CreateDefaultTemplatePlan()
-        {
-            Log.Warning("No solution file provided - creating default templates.");
-            TemplatePlan templatePlan = this.CreateBaseTemplatePlan();
-            return templatePlan;
-        }
-
-        private BuildCake ParseSolution(FilePath slnFilePath)
+        private BuildCakeTask ParseSolution(BuildCakeTask buildCakeTask, FilePath slnFilePath)
         {
             Log.Information("Parsing solution {SlnFile}.", slnFilePath);
             var solutionParserResult = solutionParser.Parse(slnFilePath);
@@ -59,17 +60,17 @@ namespace Cake.CD.Templating
                 IScriptTask scriptTask = scriptTaskFactory.CreateTaskTemplate(project);
                 if (scriptTask != null)
                 {
-                    buildCake.AddScriptTask(scriptTask);
+                    buildCakeTask.AddScriptTask(scriptTask);
                 }
             }
-            return buildCake;
+            return buildCakeTask;
         }
 
-        private TemplatePlan CreateBaseTemplatePlan()
+        private TemplatePlan CreateBaseTemplatePlan(BuildCakeTask buildCakeTask, bool shouldOverwrite)
         {
             TemplatePlan templatePlan = new TemplatePlan();
-            templatePlan.AddStep(new CopyFileStep(templateFileProvider, "build\\build.ps1", "build\\build.ps1"));
-            templatePlan.AddStep(buildCake);
+            templatePlan.AddStep(new CopyFileStep(templateFileProvider, "build\\build.ps1", "build\\build.ps1", shouldOverwrite));
+            templatePlan.AddStep(buildCakeTask);
             return templatePlan;
         }
 

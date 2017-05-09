@@ -17,11 +17,10 @@ Task(""Build - {task.Name}"")
     .Does(() =>
     {{
         var solutionPath = ""{solutionPath}"";
-        var outputZip = outputDir + ""{task.SolutionName}"";
+        var outputZip = outputDir + ""{task.SolutionName}.zip"";
 
         MSBuild(solutionPath, settings =>
-            settings.WithProperty(""VisualStudioVersion"", ""14.0"")
-                    .WithProperty(""DeployTarget"", ""Package"")
+            settings.WithProperty(""DeployTarget"", ""Package"")
                     .WithProperty(""DeployOnBuild"", ""True"")
                     .WithProperty(""AutoParameterizationWebConfigConnectionStrings"", ""false"")
                     .WithProperty(""PackageLocation"", outputZip)

@@ -9,7 +9,6 @@ Task(""Clean"")
     {{
         CleanDirectories(outputDir);
     }});
-
 ";
 
 result += GenerateParts(ScriptTaskPart.BODY);
