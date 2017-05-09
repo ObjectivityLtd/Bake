@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using Cake.CD.Command;
 using Cake.CD.Logging;
 using Cake.CD.MsBuild;
@@ -79,10 +80,24 @@ namespace Cake.CD.Templating
         {
             Log.Information("Parsing project {ProjectFile}.", project.Path.FullPath);
             LogHelper.IncreaseIndent();
-            var projectParserResult = projectParser.Parse(project.Path);
-            var result = CreateScriptTasks(project, projectParserResult);
-            LogHelper.DecreaseIndent();
-            return result;
+            try
+            {
+                ProjectParserResult projectParserResult = null;
+                if (File.Exists(project.Path.FullPath))
+                {
+                    projectParserResult = projectParser.Parse(project.Path);
+                }
+                else if (!Directory.Exists(project.Path.FullPath))
+                {
+                    Log.Warning("Project points to a non-existing file or directory: {Path}.", project.Path.FullPath);
+                    return new List<IScriptTask>();
+                }
+                return CreateScriptTasks(project, projectParserResult);
+            }
+            finally
+            {
+                LogHelper.DecreaseIndent();
+            }
         }
 
         private IEnumerable<IScriptTask> CreateScriptTasks(SolutionProject project, ProjectParserResult parserResult)

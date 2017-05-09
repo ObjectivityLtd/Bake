@@ -18,7 +18,7 @@ namespace Cake.CD.MsBuild
 
         public static bool IsSupportedSlnTypeIdentifier(string guid)
         {
-            return Equals(guid, CSharp);
+            return Equals(guid, CSharp) || Equals(guid, WebSite);
         }
 
         public static bool IsWebApplication(string guid)

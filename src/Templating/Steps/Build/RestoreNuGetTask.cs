@@ -6,7 +6,7 @@ namespace Cake.CD.Templating.Steps.Build
     {
         public string Name => "RestoreNuGet " + this.SourceFile.GetFilenameWithoutExtension().FullPath;
 
-        public FilePath SourceFile { get; private set; }
+        public FilePath SourceFile { get; }
 
         public RestoreNuGetTask(FilePath sourceFile)
         {

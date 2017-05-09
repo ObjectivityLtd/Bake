@@ -1,12 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Cake.Core.IO;
 
 namespace Cake.CD.Templating.Steps.Build
 {
-    class GulpTask
+    public class GulpTask : IScriptTask
     {
+        public string Name => "Build " + this.ProjectDir.GetDirectoryName();
+
+        public DirectoryPath ProjectDir { get; }
+
+        public GulpTask(DirectoryPath projectDir)
+        {
+            this.ProjectDir = projectDir;
+        }
     }
 }

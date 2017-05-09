@@ -11,7 +11,7 @@ namespace Cake.CD.Templating.ScriptTaskFactories
     {
         public bool IsApplicable(SolutionProject solutionProject, ProjectParserResult parserResult)
         {
-            return parserResult.IsWebApplication(solutionProject.Path.FullPath);
+            return parserResult != null && parserResult.IsWebApplication(solutionProject.Path.FullPath);
         }
 
         public IEnumerable<IScriptTask> Create(SolutionProject solutionProject, ProjectParserResult parserResult)

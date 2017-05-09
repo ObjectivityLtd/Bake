@@ -19,11 +19,6 @@ namespace Cake.CD.MsBuild
             return GetProjectTypeGuids(projectPath).Any(MsBuildGuids.IsWebApplication);
         }
 
-        public static bool IsWebSite(this ProjectParserResult projectParserResult, string projectPath)
-        {
-            return GetProjectTypeGuids(projectPath).Any(MsBuildGuids.IsWebSite);
-        }
-
         public static bool IsExecutableApplication(this ProjectParserResult projectParserResult)
         {
             return StringComparer.OrdinalIgnoreCase.Equals(projectParserResult.OutputType, "EXE");

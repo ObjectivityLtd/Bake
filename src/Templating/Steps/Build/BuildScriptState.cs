@@ -9,15 +9,15 @@ namespace Cake.CD.Templating.Steps.Build
 {
     public abstract class BuildScriptState : IScriptState
     {
-        public List<IScriptTask> ScriptTasks { get; private set; }
+        public List<IScriptTask> ScriptTasks { get; }
 
         public IScriptTask CurrentTask { get; set; }
 
-        public DirectoryPath BasePath { get; private set; }
+        public DirectoryPath BasePath { get; }
 
-        public DirectoryPath BuildScriptPath { get; private set; }
+        public DirectoryPath BuildScriptPath { get; }
 
-        public DirectoryPath OutputPath { get; private set; }
+        public DirectoryPath OutputPath { get; }
 
         private readonly ScriptTaskEvaluator scriptTaskEvaluator;
 

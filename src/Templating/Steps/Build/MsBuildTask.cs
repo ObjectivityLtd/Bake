@@ -13,11 +13,11 @@ namespace Cake.CD.Templating.Steps.Build
 
         public string Name => "Build " + this.SourceFile.GetFilenameWithoutExtension().FullPath;
 
-        public MsBuildTaskType TaskType { get; private set; }
+        public MsBuildTaskType TaskType { get; }
 
-        public FilePath SourceFile { get; private set; }
+        public FilePath SourceFile { get; }
 
-        public string SolutionName { get; private set; }
+        public string SolutionName { get; }
 
         public MsBuildTask(MsBuildTaskType taskType, FilePath sourceFile, string solutionName)
         {
