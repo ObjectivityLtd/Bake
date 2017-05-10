@@ -8,16 +8,10 @@ namespace Cake.CD.Templating
     public class TemplateFileProvider
     {
 
-        public string GetOptionalFileContents(FilePath filePath)
+        public string GetFileContents(FilePath filePath, bool optional)
         {
-            var resolvedFilePath = this.GetPathToTemplateFile(filePath, true);
+            var resolvedFilePath = this.GetPathToTemplateFile(filePath, optional);
             return resolvedFilePath == null ? null : File.ReadAllText(resolvedFilePath);
-        }
-
-        public string GetMandatoryFileContents(FilePath filePath)
-        {
-            var resolvedFilePath = this.GetPathToTemplateFile(filePath, false);
-            return File.ReadAllText(resolvedFilePath);
         }
 
         private string GetPathToTemplateFile(FilePath filePath, bool optional)

@@ -1,17 +1,18 @@
 var task = CurrentTask as MsBuildTask;
 
-var solutionPath = BuildScriptPath.GetRelativePath(task.SourceFile).FullPath;
+var projectPath = BuildScriptPath.GetRelativePath(task.SourceFile).FullPath;
 
 $@"
 Task(""{task.Name}"")
-    .Description(""Builds solution {task.SolutionName}"")
-    .IsDependentOn(""Clean"")
+    .Description(""Builds {task.TaskType} package {task.ProjectName}"")
     .Does(() =>
     {{
-        var solutionPath = ""{solutionPath}"";
-        var outputZip = outputDir + ""{task.SolutionName}.zip"";
+        var projectPath = ""{projectPath}"";
+        var outputZip = outputDir + ""{task.ProjectName}.zip"";
 
-        MSBuild(solutionPath, settings =>
+        NuGetRestore(projectPath);
+
+        MSBuild(projectPath, settings =>
             settings.WithProperty(""DeployTarget"", ""Package"")
                     .WithProperty(""DeployOnBuild"", ""True"")
                     .WithProperty(""AutoParameterizationWebConfigConnectionStrings"", ""false"")

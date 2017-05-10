@@ -18,11 +18,10 @@ namespace Cake.CD.Templating.ScriptTaskFactories
         {
             Log.Information("Project {ProjectFile} is web application - adding msbuild template.", solutionProject.Path.GetFilename());
             var sourceFile = solutionProject.Path;
-            var solutionName = solutionProject.Name;
+            var projectName = solutionProject.Name;
             return new List<IScriptTask>
             {
-                new RestoreNuGetTask(sourceFile),
-                new MsBuildTask(MsBuildTask.MsBuildTaskType.WebApplication, sourceFile, solutionName)
+                new MsBuildTask(MsBuildTask.MsBuildTaskType.WebApplication, sourceFile, projectName)
             };
         }
     }

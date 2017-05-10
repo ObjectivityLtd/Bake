@@ -17,13 +17,13 @@ namespace Cake.CD.Templating.Steps.Build
 
         public FilePath SourceFile { get; }
 
-        public string SolutionName { get; }
+        public string ProjectName { get; }
 
-        public MsBuildTask(MsBuildTaskType taskType, FilePath sourceFile, string solutionName)
+        public MsBuildTask(MsBuildTaskType taskType, FilePath sourceFile, string projectName)
         {
             this.TaskType = taskType;
             this.SourceFile = sourceFile;
-            this.SolutionName = solutionName;
+            this.ProjectName = projectName;
         }
 
     }

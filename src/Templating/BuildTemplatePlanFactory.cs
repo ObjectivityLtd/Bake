@@ -52,7 +52,7 @@ namespace Cake.CD.Templating
 
         private BuildCake ParseSolution(BuildCake buildCakeTask, FilePath slnFilePath)
         {
-            Log.Information("Parsing solution {SlnFile}.", slnFilePath);
+            Log.Information("Parsing solution {SlnFile}.", new DirectoryPath(Directory.GetCurrentDirectory()).GetRelativePath(slnFilePath));
             LogHelper.IncreaseIndent();
             var solutionParserResult = solutionParser.Parse(slnFilePath);
             foreach (var project in solutionParserResult.Projects)
@@ -78,7 +78,7 @@ namespace Cake.CD.Templating
 
         private IEnumerable<IScriptTask> ParseProject(SolutionProject project)
         {
-            Log.Information("Parsing project {ProjectFile}.", project.Path.FullPath);
+            Log.Information("Parsing project {ProjectFile}.", new DirectoryPath(Directory.GetCurrentDirectory()).GetRelativePath(project.Path));
             LogHelper.IncreaseIndent();
             try
             {

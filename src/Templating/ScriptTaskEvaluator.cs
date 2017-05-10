@@ -1,4 +1,5 @@
-﻿using Cake.CD.Scripting;
+﻿using Cake.CD.Logging;
+using Cake.CD.Scripting;
 using Serilog;
 
 namespace Cake.CD.Templating
@@ -30,7 +31,8 @@ namespace Cake.CD.Templating
         public string GeneratePart(IScriptTask scriptTask, ScriptTaskPart scriptTaskPart, IScriptState scriptState)
         {
             var scriptPath = scriptPathProvider.GetPath(scriptTask, scriptTaskPart);
-            var scriptBody = templateFileProvider.GetOptionalFileContents(scriptPath);
+            var isTemplateOptional = scriptTaskPart != ScriptTaskPart.BODY;
+            var scriptBody = templateFileProvider.GetFileContents(scriptPath, isTemplateOptional);
             if (scriptBody == null)
             {
                 return null;
@@ -38,12 +40,15 @@ namespace Cake.CD.Templating
             try
             {
                 scriptState.CurrentTask = scriptTask;
-                Log.Information("Generating {ScriptTaskPart} of {ScriptTaskName}.", scriptTaskPart, scriptTask.Name);
+                Log.Information("Generating {ScriptTaskPart} of {Type} '{ScriptTaskName}'.", 
+                    scriptTaskPart, scriptTask.GetType().Name, scriptTask.Name);
+                LogHelper.IncreaseIndent();
                 return scriptEvaluator.Evaluate(scriptBody, scriptState);
             }
             finally
             {
                 scriptState.CurrentTask = null;
+                LogHelper.DecreaseIndent();
             }
             
         }

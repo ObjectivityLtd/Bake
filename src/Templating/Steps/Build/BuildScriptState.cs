@@ -42,15 +42,13 @@ namespace Cake.CD.Templating.Steps.Build
             {
                 this.CurrentTask = task;
                 var part = scriptTaskEvaluator.GeneratePart(task, scriptTaskPart, this);
-                sb.AppendLine(part);
+                if (part != null)
+                {
+                    sb.AppendLine(part);
+                }
             }
 
             return sb.ToString();
-        }
-
-        public IEnumerable<string> GetDependencyList()
-        {
-            return this.ScriptTasks.Select(task => task.Name).ToList();
         }
 
     }

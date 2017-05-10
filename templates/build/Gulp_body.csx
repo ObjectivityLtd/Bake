@@ -1,31 +1,46 @@
+var task = CurrentTask as GulpTask;
 
-$@"Task(""BuildFrontend"")
-    .Description(""Builds Frontend package"")
+var projectPath = BuildScriptPath.GetRelativePath(task.ProjectDir).FullPath;
+var projectName = task.ProjectDir.GetDirectoryName();
+
+$@"Task(""{task.Name}"")
+    .Description(""Builds gulp package {projectName}"")
     .Does(() =>
     {{
-        Npm.WithLogLevel(NpmLogLevel.Warn).FromPath(sourceDir + ""\\wwwroot"").Install();
-        StartPowershellScript(""Push-Location -Path \""..\\..\\src\\wwwroot\"" -StackName \""build\""; jspm install; Pop-Location -StackName \""build\"";"");
+        var projectName = ""{projectName}"";
+        var srcDir = ""{projectPath}"";
+        var outputDir = outputDir + Directory(projectName);
+        var outputFile = outputFile + File($""{{projectName}}.zip"");
 
-        var projectDir = sourceDir + ""\\wwwroot"";
+        var npmSettings = new NpmInstallSettings
+        {{
+            LogLevel = NpmLogLevel.Warn,
+            WorkingDirectory = srcDir
+        }};
+
+        NpmInstall(npmSettings);
+
+        var powershellSettings = new PowershellSettings()
+        {{
+            WorkingDirectory = srcDir
+        }};
+
+        // StartPowershellScript(""jspm install"", powershellSettings);
 
         StartProcess(""cmd"", new ProcessSettings
         {{
             Arguments = ""/c \""gulp build\"""",
-            WorkingDirectory = projectDir
+            WorkingDirectory = srcDir
         }});
 
         StartProcess(""cmd"", new ProcessSettings
         {{
             Arguments = ""/c \""gulp export\"""",
-            WorkingDirectory = projectDir
+            WorkingDirectory = srcDir
         }});
 
-        var exportDir = sourceDir + ""\\wwwroot\\export"";
-        var frontendOutputDir = outputDir + ""\\Frontend"";
-        var frontendOutputZip = frontendOutputDir + ""\\Frontend.zip"";
-
-        CreateDirectory(frontendOutputDir);
-
-        Zip(exportDir, frontendOutputZip);
+        var exportDir = srcDir + Directory(""export"");
+        CreateDirectory(outputDir);
+        Zip(exportDir, outputFile);
     }});
 "

@@ -9,6 +9,7 @@ Task(""Clean"")
     {{
         CleanDirectories(outputDir);
     }});
+
 ";
 
 result += GenerateParts(ScriptTaskPart.BODY);
@@ -18,17 +19,10 @@ result += $@"
 // TASK TARGETS
 //////////////////////////////////////////////////////////////////////
 
-Task(""Default"")
-    .IsDependentOn(""Clean"")
 ";
-
-foreach (var dependency in GetDependencyList())
-{
-    result += $"    .IsDependentOn(\"{dependency}\")";
-}
-
-result += $@";
-
+result += AddDefaultTask();
+    
+result += $@"
 //////////////////////////////////////////////////////////////////////
 // EXECUTION
 //////////////////////////////////////////////////////////////////////

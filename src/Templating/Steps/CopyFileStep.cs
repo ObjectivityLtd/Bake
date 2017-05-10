@@ -14,7 +14,7 @@ namespace Cake.CD.Templating.Steps
 
         public CopyFileStep(TemplateFileProvider templateFileProvider, FilePath srcPath, FilePath dstPath, bool overwrite)
         {
-            this.contents = templateFileProvider.GetMandatoryFileContents(srcPath);
+            this.contents = templateFileProvider.GetFileContents(srcPath, true);
             this.dstPath = dstPath.MakeAbsolute(Directory.GetCurrentDirectory());
             this.overwrite = overwrite;
         }
