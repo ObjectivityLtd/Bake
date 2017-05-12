@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Cake.CD.Command;
 using Cake.CD.Logging;
 using Cake.CD.MsBuild;
@@ -32,7 +33,7 @@ namespace Cake.CD.Templating
         {
             this.solutionParser = solutionParser;
             this.projectParser = projectParser;
-            this.scriptTaskFactories = scriptTaskFactories;
+            this.scriptTaskFactories = scriptTaskFactories.OrderBy(stf => stf.Order).ToList();
             this.templateFileProvider = templateFileProvider;
             this.scriptTaskEvaluator = scriptTaskEvaluator;
         }
@@ -55,15 +56,19 @@ namespace Cake.CD.Templating
             Log.Information("Parsing solution {SlnFile}.", new DirectoryPath(Directory.GetCurrentDirectory()).GetRelativePath(slnFilePath));
             LogHelper.IncreaseIndent();
             var solutionParserResult = solutionParser.Parse(slnFilePath);
+            var buildCakeScriptTasks = new List<IScriptTask>();
             foreach (var project in solutionParserResult.Projects)
             {
                 if (project.Type == null || !MsBuildGuids.IsSupportedSlnTypeIdentifier(project.Type))
                 {
                     continue;
                 }
-                var scriptTasks = ParseProject(project);
-                buildCakeTask.AddScriptTasks(scriptTasks);
+                var scriptTasks = ParseProject(slnFilePath, project);
+                var uniqueScriptTasks = GetNewUniqueScriptTasks(buildCakeScriptTasks, scriptTasks);
+                buildCakeScriptTasks.AddRange(uniqueScriptTasks);
             }
+            var orderedTasks = buildCakeScriptTasks.OrderBy(task => task.Type.TaskOrder);
+            buildCakeTask.AddScriptTasks(orderedTasks);
             LogHelper.DecreaseIndent();
             return buildCakeTask;
         }
@@ -76,7 +81,7 @@ namespace Cake.CD.Templating
             return templatePlan;
         }
 
-        private IEnumerable<IScriptTask> ParseProject(SolutionProject project)
+        private IEnumerable<IScriptTask> ParseProject(FilePath solutionFilePath, SolutionProject project)
         {
             Log.Information("Parsing project {ProjectFile}.", new DirectoryPath(Directory.GetCurrentDirectory()).GetRelativePath(project.Path));
             LogHelper.IncreaseIndent();
@@ -92,7 +97,8 @@ namespace Cake.CD.Templating
                     Log.Warning("Project points to a non-existing file or directory: {Path}.", project.Path.FullPath);
                     return new List<IScriptTask>();
                 }
-                return CreateScriptTasks(project, projectParserResult);
+                var projectInfo = new ProjectInfo(solutionFilePath, project, projectParserResult);
+                return CreateScriptTasks(projectInfo);
             }
             finally
             {
@@ -100,17 +106,26 @@ namespace Cake.CD.Templating
             }
         }
 
-        private IEnumerable<IScriptTask> CreateScriptTasks(SolutionProject project, ProjectParserResult parserResult)
+        private IEnumerable<IScriptTask> CreateScriptTasks(ProjectInfo projectInfo)
         {
             var result = new List<IScriptTask>();
             foreach (var scriptTaskFactory in scriptTaskFactories)
             {
-                if (scriptTaskFactory.IsApplicable(project, parserResult))
+                if (scriptTaskFactory.IsApplicable(projectInfo))
                 {
-                    result.AddRange(scriptTaskFactory.Create(project, parserResult));
+                    var projectType = scriptTaskFactory.GetType().Name.Replace("Factory", "");
+                    Log.Information("Recognized project to be {ProjectType}.", projectType);
+                    var scriptTasks = scriptTaskFactory.Create(projectInfo);
+                    result.AddRange(scriptTasks);
                 }
             }
             return result;
+        }
+
+        private IEnumerable<IScriptTask> GetNewUniqueScriptTasks(IEnumerable<IScriptTask> existingScriptTasks, IEnumerable<IScriptTask> newScriptTasks)
+        {
+            var existingNames = existingScriptTasks.Select(scriptTask => scriptTask.Name).ToList();
+            return newScriptTasks.Where(scriptTask => !existingNames.Contains(scriptTask.Name));
         }
     }
 }

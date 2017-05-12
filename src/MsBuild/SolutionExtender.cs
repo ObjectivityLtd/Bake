@@ -21,7 +21,7 @@ namespace Cake.CD.MsBuild
             var newLines = EnsureSolutionContainsFolderWithFiles(lines, slnFilePath, solutionFolderName, solutionFolderPath, filePaths);
             if (newLines == lines)
             {
-                Log.Information("Files already present in the solution file - skipping.");
+                Log.Information("All files already present in the solution file - skipping.");
                 return;
             }
             Log.Information("Saving solution file {SlnFile}.", slnFilePath);

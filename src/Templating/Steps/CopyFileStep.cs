@@ -33,13 +33,7 @@ namespace Cake.CD.Templating.Steps
                 Log.Information("Creating directory {Dir}.", dstDir.FullPath);
                 Directory.CreateDirectory(dstDir.FullPath);
             }
-            if (fileExists)
-            {
-                Log.Information("Overwriting file {File}.", dstPath.FullPath);
-            } else
-            {
-                Log.Information("Creating file {File}.", dstPath.FullPath);
-            }
+            Log.Information("{Creating} file {File}.", fileExists ? "Overwriting" : "Creating", dstPath.FullPath);
             File.WriteAllText(dstPath.FullPath, contents);
             return new TemplatePlanStepResult(dstPath);
         }

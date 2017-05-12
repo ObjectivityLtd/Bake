@@ -1,0 +1,1 @@
+AddCakeNugetTool("xunit.runner.console")

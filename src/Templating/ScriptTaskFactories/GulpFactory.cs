@@ -10,24 +10,24 @@ namespace Cake.CD.Templating.ScriptTaskFactories
 {
     public class GulpFactory : IScriptTaskFactory
     {
-        public bool IsApplicable(SolutionProject solutionProject, ProjectParserResult parserResult)
+        public int Order => 10;
+
+        public bool IsApplicable(ProjectInfo projectInfo)
         {
-            var isWebsite = MsBuildGuids.IsWebSite(solutionProject.Type);
-            if (!isWebsite)
+            if (!projectInfo.IsWebsite())
             {
                 return false;
             }
-            var projectDir = new DirectoryPath(solutionProject.Path.FullPath);
+            var projectDir = new DirectoryPath(projectInfo.Project.Path.FullPath);
             return (System.IO.File.Exists(projectDir.CombineWithFilePath("package.json").FullPath)
                     && System.IO.File.Exists(projectDir.CombineWithFilePath("gulpfile.js").FullPath));            
         }
 
-        public IEnumerable<IScriptTask> Create(SolutionProject solutionProject, ProjectParserResult parserResult)
+        public IEnumerable<IScriptTask> Create(ProjectInfo projectInfo)
         {
-            Log.Information("Project {ProjectFile} is website with npm and gulp files - adding gulp template.", solutionProject.Path.GetFilename());
             return new List<IScriptTask>
             {
-                new GulpTask(new DirectoryPath(solutionProject.Path.FullPath))
+                new GulpTask(new DirectoryPath(projectInfo.Project.Path.FullPath))
             };
         }
     }

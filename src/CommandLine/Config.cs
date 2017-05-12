@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Autofac;
+﻿using Autofac;
 using Cake.CD.Cake;
 using Cake.CD.Templating.ScriptTaskFactories;
 using Cake.Core.Modules;
 using Serilog;
+using System.Linq;
+using System.Reflection;
 
 namespace Cake.CD.CommandLine
 {
@@ -44,7 +40,7 @@ namespace Cake.CD.CommandLine
         public static void ConfigureLogger()
         {
             Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
+                .MinimumLevel.Information()
                 .Enrich.FromLogContext()
                 .WriteTo.LiterateConsole(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Indent}{Message}{NewLine}{Exception}")
                 .CreateLogger();

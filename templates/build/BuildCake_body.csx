@@ -3,13 +3,6 @@ string result = $@"
 // TASKS
 //////////////////////////////////////////////////////////////////////
 
-Task(""Clean"")
-    .Description(""Cleans output folder"")
-    .Does(() =>
-    {{
-        CleanDirectories(outputDir);
-    }});
-
 ";
 
 result += GenerateParts(ScriptTaskPart.BODY);
@@ -18,9 +11,10 @@ result += $@"
 //////////////////////////////////////////////////////////////////////
 // TASK TARGETS
 //////////////////////////////////////////////////////////////////////
-
 ";
-result += AddDefaultTask();
+result += CakeBuildTasksProvider.AddBuildTasks(ScriptTasks);
+result += CakeBuildTasksProvider.AddUnitTestTasks(ScriptTasks);
+result += CakeBuildTasksProvider.AddDefaultTask();
     
 result += $@"
 //////////////////////////////////////////////////////////////////////

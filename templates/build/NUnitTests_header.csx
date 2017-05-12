@@ -1,0 +1,1 @@
+AddCakeNugetTool("NUnit.ConsoleRunner")

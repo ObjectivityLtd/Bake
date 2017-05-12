@@ -1,72 +1,51 @@
-﻿using System;
+﻿using Cake.CD.MsBuild;
+using Cake.CD.Templating.Steps.Build;
+using Cake.Common.Solution.Project;
+using Cake.Core.IO;
+using Serilog;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cake.CD.MsBuild;
-using Cake.CD.Templating.Steps.Build;
-using Cake.Common.Solution;
-using Cake.Common.Solution.Project;
-using Serilog;
-using Cake.Core.IO;
 
 namespace Cake.CD.Templating.ScriptTaskFactories
 {
     public class EntityFrameworkMigrationsFactory : IScriptTaskFactory
     {
-        public bool IsApplicable(SolutionProject solutionProject, ProjectParserResult parserResult)
+        public int Order => 0;
+
+        public bool IsApplicable(ProjectInfo projectInfo)
         {
-            if (!IsCSharpLibraryProject(solutionProject, parserResult))
+            if (!projectInfo.IsCSharpLibraryProject())
             {
                 return false;
             }
-            var entityFrameworkReference = FindEntityFrameworkReference(parserResult);
+            var entityFrameworkReference = projectInfo.FindReference("EntityFramework");
             if (entityFrameworkReference == null)
             {
                 return false;
             }
-            if (!ContainsMigrations(parserResult))
+            if (!ContainsMigrations(projectInfo.ParserResult))
             {
-                Log.Information("Project {ProjectFile} has reference to Entity Framework but it has no reference to {Dir} directory - skipping.",
-                    solutionProject.Path.GetFilename(), "migrations");
+                Log.Debug("Project {ProjectFile} has reference to Entity Framework but it has no reference to {Dir} directory - skipping.",
+                    projectInfo.Project.Path.GetFilename(), "migrations");
                 return false;
             }
             return true;
 
         }
 
-        public IEnumerable<IScriptTask> Create(SolutionProject solutionProject, ProjectParserResult parserResult)
+        public IEnumerable<IScriptTask> Create(ProjectInfo projectInfo)
         {
-            Log.Information("Project {ProjectFile} is Entity Framework project with migrations - adding migrations template.", solutionProject.Path.GetFilename());
-            var sourceFile = solutionProject.Path;
+            var sourceFile = projectInfo.Project.Path;
             var sourceDir = sourceFile.GetDirectory();
-            var projectName = solutionProject.Name;
-            var entityFrameworkReference = FindEntityFrameworkReference(parserResult);
+            var projectName = projectInfo.Project.Name;
+            var entityFrameworkReference = projectInfo.FindReference("EntityFramework");
             var entityFrameworkDllFilePath = GetPathToEntityFramework(sourceDir, entityFrameworkReference);
             var entityFrameworkMigrateFilePath = GetPathToMigrate(entityFrameworkDllFilePath);
             return new List<IScriptTask>
             {
                 new EntityFrameworkMigrationsTask(sourceFile, projectName, entityFrameworkDllFilePath, entityFrameworkMigrateFilePath)
             };
-        }
-
-        private bool IsCSharpLibraryProject(SolutionProject solutionProject, ProjectParserResult parserResult)
-        {
-            if (parserResult == null || !MsBuildGuids.IsCSharp(solutionProject.Type))
-            {
-                return false;
-            }
-            var projectPath = solutionProject.Path.FullPath;
-            if (parserResult.IsWebApplication(projectPath) || parserResult.IsExecutableApplication())
-            {
-                return false;
-            }
-            return true;
-        }
-
-        private ProjectAssemblyReference FindEntityFrameworkReference(ProjectParserResult parserResult)
-        {
-            return parserResult.References.FirstOrDefault(r => r.Include != null && r.Include.StartsWith("EntityFramework"));
         }
 
         private bool ContainsMigrations(ProjectParserResult parserResult)

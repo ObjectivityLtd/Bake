@@ -3,21 +3,21 @@ using System.Collections.Generic;
 
 namespace Cake.CD.Templating.ScriptTaskFactories
 {
-    public class ConsoleApplicationFactory : IScriptTaskFactory
+    public class XUnitTestsFactory : IScriptTaskFactory
     {
         public int Order => 10;
 
         public bool IsApplicable(ProjectInfo projectInfo)
         {
-            return projectInfo.IsExecutableApplication();
+            return projectInfo.FindReference("xunit") != null;
         }
 
         public IEnumerable<IScriptTask> Create(ProjectInfo projectInfo)
         {
             return new List<IScriptTask>
             {
-                new MsBuildTask(MsBuildTask.MsBuildTaskType.ConsoleApplication, projectInfo.Project.Path, projectInfo.Project.Name)
+                new XUnitTestsTask(projectInfo.SolutionFilePath.GetFilenameWithoutExtension().FullPath)
             };
-        }
+        }  
     }
 }

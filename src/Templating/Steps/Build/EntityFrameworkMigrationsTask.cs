@@ -6,6 +6,8 @@ namespace Cake.CD.Templating.Steps.Build
     {
         public string Name => "Build " + this.SourceFile.GetFilenameWithoutExtension().FullPath;
 
+        public ScriptTaskType Type => ScriptTaskType.BUILD_BACKEND;
+
         public FilePath SourceFile { get; }
 
         public string ProjectName { get; }

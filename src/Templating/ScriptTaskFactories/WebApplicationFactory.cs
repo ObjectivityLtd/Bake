@@ -1,27 +1,22 @@
-﻿using System.Collections.Generic;
-using Cake.CD.MsBuild;
-using Cake.CD.Templating.Steps.Build;
-using Cake.Common.Solution;
-using Cake.Common.Solution.Project;
-using Serilog;
+﻿using Cake.CD.Templating.Steps.Build;
+using System.Collections.Generic;
 
 namespace Cake.CD.Templating.ScriptTaskFactories
 {
     public class WebApplicationFactory : IScriptTaskFactory
     {
-        public bool IsApplicable(SolutionProject solutionProject, ProjectParserResult parserResult)
+        public int Order => 10;
+
+        public bool IsApplicable(ProjectInfo projectInfo)
         {
-            return parserResult != null && parserResult.IsWebApplication(solutionProject.Path.FullPath);
+            return projectInfo.IsWebApplication();
         }
 
-        public IEnumerable<IScriptTask> Create(SolutionProject solutionProject, ProjectParserResult parserResult)
+        public IEnumerable<IScriptTask> Create(ProjectInfo projectInfo)
         {
-            Log.Information("Project {ProjectFile} is web application - adding msbuild template.", solutionProject.Path.GetFilename());
-            var sourceFile = solutionProject.Path;
-            var projectName = solutionProject.Name;
             return new List<IScriptTask>
             {
-                new MsBuildTask(MsBuildTask.MsBuildTaskType.WebApplication, sourceFile, projectName)
+                new MsBuildTask(MsBuildTask.MsBuildTaskType.WebApplication, projectInfo.Project.Path, projectInfo.Project.Name)
             };
         }
     }

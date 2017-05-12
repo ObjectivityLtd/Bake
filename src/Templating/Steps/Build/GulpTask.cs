@@ -6,6 +6,8 @@ namespace Cake.CD.Templating.Steps.Build
     {
         public string Name => "Build " + this.ProjectDir.GetDirectoryName();
 
+        public ScriptTaskType Type => ScriptTaskType.BUILD_FRONTEND;
+
         public DirectoryPath ProjectDir { get; }
 
         public GulpTask(DirectoryPath projectDir)

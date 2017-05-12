@@ -3,5 +3,8 @@
     public interface IScriptTask
     {
         string Name { get; }
+
+        ScriptTaskType Type { get;  }
+
     }
 }
