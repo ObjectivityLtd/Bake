@@ -1,21 +1,25 @@
 string result = $@"
 //////////////////////////////////////////////////////////////////////
-// TASKS
+// BUILD TASKS
 //////////////////////////////////////////////////////////////////////
 
 ";
+result += GenerateParts(ScriptTaskPart.Body, ScriptTaskType.Group.Build);
+result += $@"
+//////////////////////////////////////////////////////////////////////
+// TEST TASKS
+//////////////////////////////////////////////////////////////////////
 
-result += GenerateParts(ScriptTaskPart.BODY);
-
+";
+result += GenerateParts(ScriptTaskPart.Body, ScriptTaskType.Group.UnitTest);
 result += $@"
 //////////////////////////////////////////////////////////////////////
 // TASK TARGETS
 //////////////////////////////////////////////////////////////////////
 ";
-result += CakeBuildTasksProvider.AddBuildTasks(ScriptTasks);
-result += CakeBuildTasksProvider.AddUnitTestTasks(ScriptTasks);
-result += CakeBuildTasksProvider.AddDefaultTask();
-    
+result += AddAgregateTasks("Build", ScriptTaskType.Group.Build);
+result += AddAgregateTasks("RunUnitTests", ScriptTaskType.Group.UnitTest);
+result += AddDefaultTask("Build", "RunUnitTests");
 result += $@"
 //////////////////////////////////////////////////////////////////////
 // EXECUTION

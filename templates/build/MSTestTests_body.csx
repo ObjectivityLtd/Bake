@@ -1,12 +1,14 @@
 var task = CurrentTask as MsTestTestsTask;
 
-var solutionDir = BuildScriptPath.GetRelativePath(SolutionFilePath.GetDirectory()).FullPath;
+var solutionDir = BuildScriptPath.GetRelativePath(SolutionFilePath.GetDirectory());
+var solutionName = SolutionFilePath.GetFilenameWithoutExtension();
 
 $@"Task(""{task.Name}"")
-    .IsDependentOn(""Build"")
+    .Description(""Runs mstest tests for {solutionName}"")
+    .IsDependentOn(""BuildBackend"")
     .Does(() =>
 {{
-    MSTest($""{solutionDir}/**/bin/{{configuration}}/*.Tests.dll"", new MSTestSettings {{
+    MSTest($""{solutionDir.FullPath}/**/bin/{{configuration}}/*.Tests.dll"", new MSTestSettings {{
         
     }});
 }});

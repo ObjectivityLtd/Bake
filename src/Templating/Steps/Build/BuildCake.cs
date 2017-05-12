@@ -16,7 +16,7 @@ namespace Cake.CD.Templating.Steps.Build
 
         public string Name => "build.cake";
 
-        public ScriptTaskType Type => ScriptTaskType.ENTRY;
+        public ScriptTaskType Type => ScriptTaskType.Entry;
 
         public BuildCake(ScriptTaskEvaluator scriptTaskEvaluator, InitOptions initOptions)
         {

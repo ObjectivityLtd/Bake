@@ -10,6 +10,26 @@ namespace Cake.CD.Templating.ScriptTaskFactories
     {
         public FilePath SolutionFilePath { get; }
 
+        public DirectoryPath ProjectDirectoryPath
+        {
+            get
+            {
+                if (Project == null)
+                {
+                    return null;
+                }
+                if (System.IO.File.Exists(Project.Path.FullPath))
+                {
+                    return Project.Path.GetDirectory();
+                }
+                if (System.IO.Directory.Exists(Project.Path.FullPath))
+                {
+                    return new DirectoryPath(Project.Path.FullPath);
+                }
+                return null;
+            }
+        }
+
         public SolutionProject Project { get; }
 
         public ProjectParserResult ParserResult { get; }

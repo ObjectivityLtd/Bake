@@ -7,30 +7,18 @@ namespace Cake.CD.Templating.Steps.Build
 {
     public class CakeBuildTasksProvider
     {
-        private static string TASK_BUILD_ALL = "Build";
-
-        private static string TASK_RUN_ALL_UNIT_TESTS = "RunUnitTests";
-
-        public string AddBuildTasks(IEnumerable<IScriptTask> scriptTasks)
+        public string AddAgregateTasks(IEnumerable<IScriptTask> scriptTasks, ScriptTaskType.Group scriptTaskTypeGroup, string aggregateTaskName)
         {
             var sb = new StringBuilder();
-            var addedTasks = AppendBuildTasks(sb, scriptTasks, ScriptTaskType.Group.BUILD);
-            AppendAggregateTask(sb, TASK_BUILD_ALL, addedTasks); 
+            var addedTasks = AppendBuildTasks(sb, scriptTasks, scriptTaskTypeGroup);
+            AppendAggregateTask(sb, aggregateTaskName, addedTasks); 
             return sb.ToString();
         }
 
-        public string AddUnitTestTasks(IEnumerable<IScriptTask> scriptTasks)
+        public string AddDefaultTask(params string[] dependentTasks)
         {
             var sb = new StringBuilder();
-            var addedTasks = AppendBuildTasks(sb, scriptTasks, ScriptTaskType.Group.UNIT_TEST);
-            AppendAggregateTask(sb, TASK_RUN_ALL_UNIT_TESTS, addedTasks);
-            return sb.ToString();
-        }
-
-        public string AddDefaultTask()
-        {
-            var sb = new StringBuilder();
-            var dependentOnList = GetDependentOnList(new List<string> { TASK_BUILD_ALL, TASK_RUN_ALL_UNIT_TESTS });
+            var dependentOnList = GetDependentOnList(dependentTasks);
             AppendTask(sb, "Default", dependentOnList);
             return sb.ToString();
         }

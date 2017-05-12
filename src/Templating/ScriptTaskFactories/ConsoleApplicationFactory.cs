@@ -5,7 +5,9 @@ namespace Cake.CD.Templating.ScriptTaskFactories
 {
     public class ConsoleApplicationFactory : IScriptTaskFactory
     {
-        public int Order => 10;
+        public int ParsingOrder => 10;
+
+        public bool IsTerminating => false;
 
         public bool IsApplicable(ProjectInfo projectInfo)
         {

@@ -6,7 +6,7 @@ namespace Cake.CD.Templating.Steps.Build
     {
         public string Name => "Build " + this.SourceFile.GetFilenameWithoutExtension().FullPath;
 
-        public ScriptTaskType Type => ScriptTaskType.BUILD_INTEGRATION_TESTS;
+        public ScriptTaskType Type => ScriptTaskType.BuildIntegrationTests;
 
         public FilePath SourceFile { get; }
 

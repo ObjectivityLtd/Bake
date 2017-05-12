@@ -4,7 +4,10 @@ namespace Cake.CD.Templating.ScriptTaskFactories
 {
     public interface IScriptTaskFactory
     {
-        int Order { get; }
+        int ParsingOrder { get; }
+
+        // if true, other factories will not be run if project is applicable for this factory
+        bool IsTerminating { get; }
 
         IEnumerable<IScriptTask> Create(ProjectInfo projectInfo);
 

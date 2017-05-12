@@ -23,21 +23,23 @@ namespace Cake.CD.Scripting
                 
             object result = null;
             var currentTaskName = scriptState.CurrentTask == null ? "<none>" : scriptState.CurrentTask.Name;
+            var currentTaskType = scriptState.CurrentTask == null ? "" : scriptState.CurrentTask.GetType().Name;
             try
             {
-                CSharpScript.EvaluateAsync(scriptBody, options: options, globals: scriptState)
+                CSharpScript.EvaluateAsync(scriptBody, options, scriptState)
                      .ContinueWith(s => result = s.Result)
                      .Wait();
             } catch (CompilationErrorException e)
             {
-                Log.Error("Failed to compile script {Name}: {Diag}", currentTaskName, string.Join(Environment.NewLine, e.Diagnostics));
-                throw e;
+                Log.Error("Failed to compile script {Type} '{Name}': {Diag}", 
+                    currentTaskType, currentTaskName, string.Join(Environment.NewLine, e.Diagnostics));
+                throw;
             } catch (Exception e)
             {
-                Log.Error("Failed to execute script {Name}", currentTaskName, e);
-                throw e;
+                Log.Error("Failed to execute script {Type} '{Name}'", currentTaskType, currentTaskName, e);
+                throw;
             }
-            return result as string;
+            return (result as string)?.TrimEnd();
         }   
     }
 }

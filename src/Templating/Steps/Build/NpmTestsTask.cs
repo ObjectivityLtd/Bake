@@ -2,17 +2,17 @@
 
 namespace Cake.CD.Templating.Steps.Build
 {
-    public class GulpTask : IScriptTask
+    public class NpmTestsTask : IScriptTask
     {
-        public string Name => "Build " + this.NpmProjectName;
+        public string Name => "Run tests " + this.NpmProjectName;
 
-        public ScriptTaskType Type => ScriptTaskType.BuildFrontend;
+        public ScriptTaskType Type => ScriptTaskType.UnitTestFrontend;
 
         public DirectoryPath ProjectDir { get; }
 
         public string NpmProjectName { get; }
 
-        public GulpTask(DirectoryPath projectDir, string npmProjectName)
+        public NpmTestsTask(DirectoryPath projectDir, string npmProjectName)
         {
             this.ProjectDir = projectDir;
             this.NpmProjectName = npmProjectName ?? this.ProjectDir.GetDirectoryName();

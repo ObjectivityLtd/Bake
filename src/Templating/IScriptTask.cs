@@ -4,7 +4,7 @@
     {
         string Name { get; }
 
-        ScriptTaskType Type { get;  }
+        ScriptTaskType Type { get; }
 
     }
 }

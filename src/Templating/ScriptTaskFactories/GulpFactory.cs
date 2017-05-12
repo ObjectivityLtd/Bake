@@ -1,16 +1,14 @@
-﻿using System.Collections.Generic;
-using Cake.CD.MsBuild;
-using Cake.CD.Templating.Steps.Build;
-using Cake.Common.Solution;
-using Cake.Common.Solution.Project;
+﻿using Cake.CD.Templating.Steps.Build;
 using Cake.Core.IO;
-using Serilog;
+using System.Collections.Generic;
 
 namespace Cake.CD.Templating.ScriptTaskFactories
 {
-    public class GulpFactory : IScriptTaskFactory
+    public class GulpFactory : AbstractNpmTaskFactory, IScriptTaskFactory
     {
-        public int Order => 10;
+        public int ParsingOrder => 10;
+
+        public bool IsTerminating => false;
 
         public bool IsApplicable(ProjectInfo projectInfo)
         {
@@ -18,16 +16,15 @@ namespace Cake.CD.Templating.ScriptTaskFactories
             {
                 return false;
             }
-            var projectDir = new DirectoryPath(projectInfo.Project.Path.FullPath);
-            return (System.IO.File.Exists(projectDir.CombineWithFilePath("package.json").FullPath)
-                    && System.IO.File.Exists(projectDir.CombineWithFilePath("gulpfile.js").FullPath));            
+            return (this.IsPackageJsonPresent(projectInfo.ProjectDirectoryPath)
+                    && System.IO.File.Exists(projectInfo.ProjectDirectoryPath.CombineWithFilePath("gulpfile.js").FullPath));            
         }
 
         public IEnumerable<IScriptTask> Create(ProjectInfo projectInfo)
         {
             return new List<IScriptTask>
             {
-                new GulpTask(new DirectoryPath(projectInfo.Project.Path.FullPath))
+                new GulpTask(projectInfo.ProjectDirectoryPath, GetNpmProjectName(projectInfo.ProjectDirectoryPath))
             };
         }
     }

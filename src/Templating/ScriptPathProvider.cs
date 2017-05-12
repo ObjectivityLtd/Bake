@@ -5,7 +5,7 @@ namespace Cake.CD.Templating
 {
     public class ScriptPathProvider
     {
-        private static Regex TASK_REGEX = new Regex(@"Task$");
+        private static readonly Regex TaskRegex = new Regex(@"Task$");
 
         public string GetPath(IScriptTask scriptTask, ScriptTaskPart scriptTaskPart)
         {
@@ -23,7 +23,7 @@ namespace Cake.CD.Templating
         private string GetFileName(IScriptTask scriptTask, ScriptTaskPart scriptTaskPart)
         {
             var name = scriptTask.GetType().Name;
-            return TASK_REGEX.Replace(name, "") + "_" + scriptTaskPart.ToString().ToLower() + ".csx";
+            return TaskRegex.Replace(name, "") + "_" + scriptTaskPart.ToString().ToLower() + ".csx";
         }
     }
 }

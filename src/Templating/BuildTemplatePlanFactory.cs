@@ -33,7 +33,7 @@ namespace Cake.CD.Templating
         {
             this.solutionParser = solutionParser;
             this.projectParser = projectParser;
-            this.scriptTaskFactories = scriptTaskFactories.OrderBy(stf => stf.Order).ToList();
+            this.scriptTaskFactories = scriptTaskFactories.OrderBy(stf => stf.ParsingOrder).ToList();
             this.templateFileProvider = templateFileProvider;
             this.scriptTaskEvaluator = scriptTaskEvaluator;
         }
@@ -109,14 +109,15 @@ namespace Cake.CD.Templating
         private IEnumerable<IScriptTask> CreateScriptTasks(ProjectInfo projectInfo)
         {
             var result = new List<IScriptTask>();
-            foreach (var scriptTaskFactory in scriptTaskFactories)
+            foreach (var scriptTaskFactory in scriptTaskFactories.Where(stf => stf.IsApplicable(projectInfo)))
             {
-                if (scriptTaskFactory.IsApplicable(projectInfo))
+                var projectType = scriptTaskFactory.GetType().Name.Replace("Factory", "");
+                Log.Information("Recognized project to be {ProjectType}.", projectType);
+                var scriptTasks = scriptTaskFactory.Create(projectInfo);
+                result.AddRange(scriptTasks);
+                if (scriptTaskFactory.IsTerminating)
                 {
-                    var projectType = scriptTaskFactory.GetType().Name.Replace("Factory", "");
-                    Log.Information("Recognized project to be {ProjectType}.", projectType);
-                    var scriptTasks = scriptTaskFactory.Create(projectInfo);
-                    result.AddRange(scriptTasks);
+                    break;
                 }
             }
             return result;

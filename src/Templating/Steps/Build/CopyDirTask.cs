@@ -6,7 +6,7 @@ namespace Cake.CD.Templating.Steps.Build
     {
         public string Name => "Copy " + this.SourceDir.GetDirectoryName();
 
-        public ScriptTaskType Type => ScriptTaskType.BUILD_BACKEND;
+        public ScriptTaskType Type => ScriptTaskType.BuildBackend;
 
         public DirectoryPath SourceDir { get; }
 

@@ -2,6 +2,7 @@
 using Cake.Core.IO;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace Cake.CD.Templating.Steps.Build
@@ -37,10 +38,10 @@ namespace Cake.CD.Templating.Steps.Build
             this.ScriptTasks.AddRange(scriptTasks);
         }
 
-        public string GenerateParts(ScriptTaskPart scriptTaskPart)
+        public string GenerateParts(ScriptTaskPart scriptTaskPart, ScriptTaskType.Group scriptTaskTypeGroup)
         {
             StringBuilder sb = new StringBuilder();
-            foreach (var task in ScriptTasks)
+            foreach (var task in ScriptTasks.Where(scriptTask => scriptTask.Type.TaskGroup == scriptTaskTypeGroup))
             {
                 this.CurrentTask = task;
                 var part = scriptTaskEvaluator.GeneratePart(task, scriptTaskPart, this);

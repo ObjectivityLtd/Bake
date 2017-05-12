@@ -5,7 +5,9 @@ namespace Cake.CD.Templating.ScriptTaskFactories
 {
     public class WebDriverTestsFactory : IScriptTaskFactory
     {
-        public int Order => 0;
+        public int ParsingOrder => 0;
+
+        public bool IsTerminating => true;
 
         public bool IsApplicable(ProjectInfo projectInfo)
         {

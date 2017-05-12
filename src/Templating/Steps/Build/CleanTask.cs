@@ -6,7 +6,7 @@ namespace Cake.CD.Templating.Steps.Build
     {
         public string Name => "Clean " + this.SolutionName;
 
-        public ScriptTaskType Type => ScriptTaskType.BUILD_BACKEND;
+        public ScriptTaskType Type => ScriptTaskType.BuildBackend;
 
         public string SolutionName { get; }
 

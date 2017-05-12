@@ -3,11 +3,12 @@ var task = CurrentTask as GulpTask;
 var projectPath = BuildScriptPath.GetRelativePath(task.ProjectDir).FullPath;
 var projectName = task.ProjectDir.GetDirectoryName();
 
-$@"Task(""{task.Name}"")
-    .Description(""Builds gulp package {projectName}"")
+$@"
+Task(""{task.Name}"")
+    .Description(""Builds gulp package {task.NpmProjectName}"")
     .Does(() =>
     {{
-        var projectName = ""{projectName}"";
+        var projectName = ""{task.NpmProjectName}"";
         var srcDir = ""{projectPath}"";
         var outputDir = outputDir + Directory(projectName);
         var outputFile = outputFile + File($""{{projectName}}.zip"");

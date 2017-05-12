@@ -1,4 +1,5 @@
-string result = GenerateParts(ScriptTaskPart.HEADER);
+string result = GenerateParts(ScriptTaskPart.Header, ScriptTaskType.Group.Build);
+result += GenerateParts(ScriptTaskPart.Header, ScriptTaskType.Group.UnitTest);
 
 result += $@"
 //////////////////////////////////////////////////////////////////////

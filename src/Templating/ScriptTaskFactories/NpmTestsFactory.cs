@@ -1,9 +1,12 @@
 ﻿using Cake.CD.Templating.Steps.Build;
+using Cake.Core.IO;
+using Newtonsoft.Json.Linq;
+using Serilog;
 using System.Collections.Generic;
 
 namespace Cake.CD.Templating.ScriptTaskFactories
 {
-    public class NUnitTestsFactory : IScriptTaskFactory
+    public class NpmTestsFactory : AbstractNpmTaskFactory, IScriptTaskFactory
     {
         public int ParsingOrder => 10;
 
@@ -11,17 +14,17 @@ namespace Cake.CD.Templating.ScriptTaskFactories
 
         public bool IsApplicable(ProjectInfo projectInfo)
         {
-            return projectInfo.FindReference("nunit") != null;
+            return projectInfo.IsWebsite() 
+                && this.IsPackageJsonPresent(projectInfo.ProjectDirectoryPath) 
+                && this.IsNpmTestScriptPresent(projectInfo.ProjectDirectoryPath);
         }
 
         public IEnumerable<IScriptTask> Create(ProjectInfo projectInfo)
         {
             return new List<IScriptTask>
             {
-                new NUnitTestsTask(projectInfo.SolutionFilePath.GetFilenameWithoutExtension().FullPath)
+                new NpmTestsTask(projectInfo.ProjectDirectoryPath, GetNpmProjectName(projectInfo.ProjectDirectoryPath))
             };
         }
-
-        
     }
 }

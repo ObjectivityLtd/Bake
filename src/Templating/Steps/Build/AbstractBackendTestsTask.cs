@@ -1,14 +1,14 @@
 ﻿namespace Cake.CD.Templating.Steps.Build
 {
-    public abstract class AbstractTestsTask : IScriptTask
+    public abstract class AbstractBackendTestsTask : IScriptTask
     {
         public string Name => "Run tests " + this.SolutionName;
 
-        public ScriptTaskType Type => ScriptTaskType.UNIT_TEST_BACKEND;
+        public ScriptTaskType Type => ScriptTaskType.UnitTestBackend;
 
         public string SolutionName { get; }
 
-        public AbstractTestsTask(string solutionName)
+        public AbstractBackendTestsTask(string solutionName)
         {
             this.SolutionName = solutionName;
         }

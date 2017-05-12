@@ -2,8 +2,8 @@
 {
     public enum ScriptTaskPart
     {
-        HEADER,
-        BODY,
-        FOOTER
+        Header,
+        Body,
+        Footer
     }
 }

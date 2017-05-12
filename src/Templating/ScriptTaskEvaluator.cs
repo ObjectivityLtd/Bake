@@ -22,16 +22,16 @@ namespace Cake.CD.Templating
         public string GenerateAllParts(IScriptTask scriptTask, IScriptState scriptState)
         {
             return string.Concat(
-                GeneratePart(scriptTask, ScriptTaskPart.HEADER, scriptState),
-                GeneratePart(scriptTask, ScriptTaskPart.BODY, scriptState),
-                GeneratePart(scriptTask, ScriptTaskPart.FOOTER, scriptState)
+                GeneratePart(scriptTask, ScriptTaskPart.Header, scriptState),
+                GeneratePart(scriptTask, ScriptTaskPart.Body, scriptState),
+                GeneratePart(scriptTask, ScriptTaskPart.Footer, scriptState)
                 );
         }
 
         public string GeneratePart(IScriptTask scriptTask, ScriptTaskPart scriptTaskPart, IScriptState scriptState)
         {
             var scriptPath = scriptPathProvider.GetPath(scriptTask, scriptTaskPart);
-            var isTemplateOptional = scriptTaskPart != ScriptTaskPart.BODY;
+            var isTemplateOptional = scriptTaskPart != ScriptTaskPart.Body;
             var scriptBody = templateFileProvider.GetFileContents(scriptPath, isTemplateOptional);
             if (scriptBody == null)
             {

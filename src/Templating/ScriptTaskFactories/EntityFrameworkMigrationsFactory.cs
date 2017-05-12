@@ -11,7 +11,9 @@ namespace Cake.CD.Templating.ScriptTaskFactories
 {
     public class EntityFrameworkMigrationsFactory : IScriptTaskFactory
     {
-        public int Order => 0;
+        public int ParsingOrder => 0;
+
+        public bool IsTerminating => false;
 
         public bool IsApplicable(ProjectInfo projectInfo)
         {
