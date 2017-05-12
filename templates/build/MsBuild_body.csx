@@ -7,10 +7,10 @@ Task(""{task.Name}"")
     .Description(""Builds {task.TaskType} package {task.ProjectName}"")
     .Does(() =>
     {{
-        var projectPath = ""{projectPath}"";
-        var outputZip = outputDir + ""{task.ProjectName}.zip"";
+        var projectPath = File(""{projectPath}"");
+        var outputZip = outputDir + File(""{task.ProjectName}.zip"");
 
-        NuGetRestore(projectPath);
+        // NuGetRestore(projectPath);
 
         MSBuild(projectPath, settings =>
             settings.WithProperty(""DeployTarget"", ""Package"")

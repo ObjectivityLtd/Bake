@@ -3,18 +3,14 @@ using System.Collections.Generic;
 
 namespace Cake.CD.Templating.ScriptTaskFactories
 {
-    public class WebApplicationFactory : IScriptTaskFactory
+    public class WebApplicationFactory : AbstractScriptTaskFactory
     {
-        public int ParsingOrder => 10;
-
-        public bool IsTerminating => false;
-
-        public bool IsApplicable(ProjectInfo projectInfo)
+        public override bool IsApplicable(ProjectInfo projectInfo)
         {
             return projectInfo.IsWebApplication();
         }
 
-        public IEnumerable<IScriptTask> Create(ProjectInfo projectInfo)
+        public override IEnumerable<IScriptTask> Create(ProjectInfo projectInfo)
         {
             return new List<IScriptTask>
             {

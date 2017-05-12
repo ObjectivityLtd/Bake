@@ -8,8 +8,8 @@ Task(""{task.Name}"")
     .Description(""Package PSCI deploy scripts and PSCI itself"")
     .Does(() =>
     {{
-        var psciDeployScriptPath = ""{psciDeployScriptPath}"";
-        var psciDeployDir = ""{psciScriptsDeployDir}"";
+        var psciDeployScriptPath = File(""{psciDeployScriptPath}"");
+        var psciDeployDir = Directory(""{psciScriptsDeployDir}"");
         var outDir = outputDir + Directory(""DeployScripts"");
 
         CreateDirectory(outDir);

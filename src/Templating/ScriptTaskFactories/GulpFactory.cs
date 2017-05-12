@@ -4,13 +4,9 @@ using System.Collections.Generic;
 
 namespace Cake.CD.Templating.ScriptTaskFactories
 {
-    public class GulpFactory : AbstractNpmTaskFactory, IScriptTaskFactory
+    public class GulpFactory : AbstractNpmTaskFactory
     {
-        public int ParsingOrder => 10;
-
-        public bool IsTerminating => false;
-
-        public bool IsApplicable(ProjectInfo projectInfo)
+        public override bool IsApplicable(ProjectInfo projectInfo)
         {
             if (!projectInfo.IsWebsite())
             {
@@ -20,7 +16,7 @@ namespace Cake.CD.Templating.ScriptTaskFactories
                     && System.IO.File.Exists(projectInfo.ProjectDirectoryPath.CombineWithFilePath("gulpfile.js").FullPath));            
         }
 
-        public IEnumerable<IScriptTask> Create(ProjectInfo projectInfo)
+        public override IEnumerable<IScriptTask> Create(ProjectInfo projectInfo)
         {
             return new List<IScriptTask>
             {

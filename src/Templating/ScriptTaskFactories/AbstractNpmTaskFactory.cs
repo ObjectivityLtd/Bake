@@ -4,7 +4,7 @@ using Serilog;
 
 namespace Cake.CD.Templating.ScriptTaskFactories
 {
-    public class AbstractNpmTaskFactory
+    public abstract class AbstractNpmTaskFactory : AbstractScriptTaskFactory
     {
         protected bool IsPackageJsonPresent(DirectoryPath projectDir)
         {

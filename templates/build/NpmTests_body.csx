@@ -8,13 +8,13 @@ Task(""{task.Name}"")
     .IsDependentOn(""BuildFrontend"")
     .Does(() =>
     {{
-        var srcDir = ""{projectPath}"";
+        var srcDir = Directory(""{projectPath}"");
         
         NpmRunScript(new NpmRunScriptSettings {{
             LogLevel = NpmLogLevel.Info,
             WorkingDirectory = srcDir,
             ScriptName = ""test""
-        }};
+        }});
 
     }});
 "

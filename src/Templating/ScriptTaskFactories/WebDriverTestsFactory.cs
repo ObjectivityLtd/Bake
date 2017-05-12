@@ -3,18 +3,18 @@ using System.Collections.Generic;
 
 namespace Cake.CD.Templating.ScriptTaskFactories
 {
-    public class WebDriverTestsFactory : IScriptTaskFactory
+    public class WebDriverTestsFactory : AbstractScriptTaskFactory
     {
-        public int ParsingOrder => 0;
+        public override int ParsingOrder => 0;
 
-        public bool IsTerminating => true;
+        public override bool IsTerminating => true;
 
-        public bool IsApplicable(ProjectInfo projectInfo)
+        public override bool IsApplicable(ProjectInfo projectInfo)
         {
             return projectInfo.IsUnitTestProject() && projectInfo.FindReference("WebDriver") != null;
         }
 
-        public IEnumerable<IScriptTask> Create(ProjectInfo projectInfo)
+        public override IEnumerable<IScriptTask> Create(ProjectInfo projectInfo)
         {
             return new List<IScriptTask>
             {

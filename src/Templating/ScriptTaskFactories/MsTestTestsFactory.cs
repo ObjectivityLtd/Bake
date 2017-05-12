@@ -4,13 +4,9 @@ using System.Collections.Generic;
 
 namespace Cake.CD.Templating.ScriptTaskFactories
 {
-    public class MsTestTestsFactory : IScriptTaskFactory
+    public class MsTestTestsFactory : AbstractScriptTaskFactory
     {
-        public int ParsingOrder => 10;
-
-        public bool IsTerminating => false;
-
-        public bool IsApplicable(ProjectInfo projectInfo)
+        public override bool IsApplicable(ProjectInfo projectInfo)
         {
             var parserResult = projectInfo.ParserResult;
             return (parserResult != null
@@ -21,7 +17,7 @@ namespace Cake.CD.Templating.ScriptTaskFactories
             );
         }
 
-        public IEnumerable<IScriptTask> Create(ProjectInfo projectInfo)
+        public override IEnumerable<IScriptTask> Create(ProjectInfo projectInfo)
         {
             return new List<IScriptTask>
             {

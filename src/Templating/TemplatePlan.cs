@@ -25,6 +25,7 @@ namespace Cake.CD.Templating
         {
             var stepResults = new List<TemplatePlanStepResult>();
             var i = 1;
+            LogHelper.LogHeader("Creating build scripts");
             foreach (var step in steps)
             {
                 Log.Information("Executing step {Step} ({i}/{total}).", step, i, steps.Count);

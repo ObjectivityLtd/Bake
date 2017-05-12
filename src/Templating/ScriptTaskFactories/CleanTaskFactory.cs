@@ -3,19 +3,25 @@ using System.Collections.Generic;
 
 namespace Cake.CD.Templating.ScriptTaskFactories
 {
-    public class ConsoleApplicationFactory : AbstractScriptTaskFactory
+    public class CleanTaskFactory : AbstractScriptTaskFactory
     {
+        public override int ParsingOrder => 0;
+
+        public override bool IsSolutionLevel => true;
+
         public override bool IsApplicable(ProjectInfo projectInfo)
         {
-            return projectInfo.IsExecutableApplication();
+            return true;
         }
 
         public override IEnumerable<IScriptTask> Create(ProjectInfo projectInfo)
         {
             return new List<IScriptTask>
             {
-                new MsBuildTask(MsBuildTask.MsBuildTaskType.ConsoleApplication, projectInfo.Project.Path, projectInfo.Project.Name)
+                new CleanTask()
             };
         }
+
+        
     }
 }

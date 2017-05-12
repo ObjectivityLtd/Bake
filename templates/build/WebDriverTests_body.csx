@@ -7,8 +7,8 @@ Task(""{task.Name}"")
     .Description(""Builds webdriver package {task.ProjectName}"")
     .Does(() =>
     {{
-        var projectPath = ""{projectPath}"";
-        var dstDir = outputDir + ""{task.ProjectName}"";
+        var projectPath = File(""{projectPath}"");
+        var dstDir = outputDir + Directory(""{task.ProjectName}"");
 
         NuGetRestore(projectPath);
 

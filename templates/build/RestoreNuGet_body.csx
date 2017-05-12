@@ -1,11 +1,12 @@
-var task = CurrentTask as RestoreNuGetTask;
+var task = CurrentTask as RestoreNugetTask;
 
-var projectPath = BuildScriptPath.GetRelativePath(task.SourceFile).FullPath;
+var solutionFilePath = BuildScriptPath.GetRelativePath(SolutionFilePath).FullPath;
 
 $@"
 Task(""{task.Name}"")
+    .Description(""Restores nuget packages for solution {task.SolutionName}"")
     .Does(() =>
     {{
-        NuGetRestore(""{projectPath}"");
+        NuGetRestore(""{solutionFilePath}"");
     }});
 "

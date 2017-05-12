@@ -10,8 +10,9 @@ Task(""{task.Name}"")
         var solutionDir = ""{solutionDir}"";
 
         CleanDirectories(outputDir);
-        CleanDirectories(solutionDir + $""/**/obj/{configuration}"");
-        CleanDirectories(solutionDir + $""/**/bin/{configuration}"");
+        CreateDirectory(outputDir);
+        CleanDirectories(solutionDir + ""/**/obj/"" + configuration);
+        CleanDirectories(solutionDir + ""/**/bin/"" + configuration);
     }});
 
 ";

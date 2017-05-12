@@ -9,9 +9,9 @@ Task(""{task.Name}"")
     .Does(() =>
     {{
         var projectName = ""{task.NpmProjectName}"";
-        var srcDir = ""{projectPath}"";
-        var outputDir = outputDir + Directory(projectName);
-        var outputFile = outputFile + File($""{{projectName}}.zip"");
+        var srcDir = Directory(""{projectPath}"");
+        var outDir = outputDir + Directory(projectName);
+        var outputFile = outDir + File(projectName + "".zip"");
 
         var npmSettings = new NpmInstallSettings
         {{
@@ -21,10 +21,10 @@ Task(""{task.Name}"")
 
         NpmInstall(npmSettings);
 
-        var powershellSettings = new PowershellSettings()
-        {{
-            WorkingDirectory = srcDir
-        }};
+        //var powershellSettings = new PowershellSettings()
+        //{{
+        //   WorkingDirectory = srcDir
+        //}};
 
         // StartPowershellScript(""jspm install"", powershellSettings);
 
@@ -41,7 +41,7 @@ Task(""{task.Name}"")
         }});
 
         var exportDir = srcDir + Directory(""export"");
-        CreateDirectory(outputDir);
+        CreateDirectory(outDir);
         Zip(exportDir, outputFile);
     }});
 "

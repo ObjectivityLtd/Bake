@@ -9,7 +9,8 @@ Task(""{task.Name}"")
     .IsDependentOn(""BuildBackend"")
     .Does(() =>
     {{
-        XUnit2($""{solutionDir.FullPath}/**/bin/{{configuration}}/*.Tests.dll"", new XUnit2Settings {{
+        var solutionDir = ""solutionDir.FullPath"";
+        XUnit2(solutionDir + ""/**/bin/{{configuration}}/*.Tests.dll"", new XUnit2Settings {{
         
         }});
     }});

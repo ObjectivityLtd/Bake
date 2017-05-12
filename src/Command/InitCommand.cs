@@ -16,7 +16,7 @@ namespace Cake.CD.Command
         {
             var solutionFilePath = initOptions.SolutionFilePath;
             var buildResult = commandRunner.GenerateBuildScriptsCommand.Generate(initOptions);
-            //var deployScriptPaths = commandRunner.GenerateDeployScriptsCommand.Generate();
+            var deployResult = commandRunner.GenerateDeployScriptsCommand.Generate(initOptions);
             if (solutionFilePath != null && buildResult.GetAddedFiles().Any())
             { 
                 var relativePaths = buildResult.GetAddedFiles()

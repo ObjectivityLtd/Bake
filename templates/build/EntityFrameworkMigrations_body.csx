@@ -7,12 +7,12 @@ Task(""{task.Name}"")
     .Description(""Builds migration package {task.ProjectName}"")
     .Does(() =>
     {{
-        var projectPath = ""{projectPath}"";
-        var projectDir = projectPath.GetDirectory();
-        var outputDir = outputDir + Directory(""Migrations.{task.ProjectName}"";
+        var projectPath = File(""{projectPath}"");
+        var projectDir = projectPath.Path.GetDirectory();
+        var outDir = outputDir + Directory(""Migrations.{task.ProjectName}"");
 
-        MSBuild(project, settings =>
-            settings.WithProperty(""OutDir"", outputDir)
+        MSBuild(projectPath, settings =>
+            settings.WithProperty(""OutDir"", outDir)
                     .SetConfiguration(configuration)
                     .SetNodeReuse(false)
         );

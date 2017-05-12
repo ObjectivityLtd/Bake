@@ -29,21 +29,21 @@ namespace Cake.CD.MsBuild
             LogHelper.DecreaseIndent();
         }
 
-        private List<string> ReadSolutionFile(string slnFilePath)
+        private List<string> ReadSolutionFile(FilePath slnFilePath)
         {
-            if (!File.Exists(slnFilePath))
+            if (!File.Exists(slnFilePath.FullPath))
             {
-                throw new InvalidOperationException($"Solution file '{System.IO.Path.GetFullPath(slnFilePath)}' does not exist.");
+                throw new InvalidOperationException($"Solution file '{slnFilePath.FullPath}' does not exist.");
             }
-            Log.Information("Adding entries to solution file {SlnFile}.", slnFilePath);
-            return File.ReadAllLines(slnFilePath, Encoding.UTF8).ToList();
+            LogHelper.LogHeader("Adding entries to solution file {SlnFile}.", slnFilePath.GetFilename().FullPath);
+            return File.ReadAllLines(slnFilePath.FullPath, Encoding.UTF8).ToList();
         }  
-
-        private IEnumerable<string> EnsureSolutionContainsFolderWithFiles(List<string> lines, string slnFilePath, string solutionFolderName, string solutionFolderPath, IEnumerable<string> filePaths)
+        
+        private IEnumerable<string> EnsureSolutionContainsFolderWithFiles(List<string> lines, FilePath slnFilePath, string solutionFolderName, string solutionFolderPath, IEnumerable<string> filePaths)
         {
             int lastProjectLine = -1;
             int i = -1;
-            var slnDirectory = new DirectoryPath(System.IO.Path.GetDirectoryName(System.IO.Path.GetFullPath(slnFilePath)));
+            var slnDirectory = slnFilePath.GetDirectory();
             foreach (var line in lines)
             {
                 i++;
@@ -114,12 +114,12 @@ namespace Cake.CD.MsBuild
             return result;
         }
 
-        private void AssertProjectPathsAreEqual(string slnFilePath, string solutionFolderName, string solutionFolderPath, string currentSolutionFolderPath)
+        private void AssertProjectPathsAreEqual(FilePath slnFilePath, string solutionFolderName, string solutionFolderPath, string currentSolutionFolderPath)
         {
             if (!StringComparer.OrdinalIgnoreCase.Equals(solutionFolderPath, currentSolutionFolderPath))
             {
                 throw new InvalidOperationException(
-                    $"Solution '{slnFilePath}' already contains solution folder named " +
+                    $"Solution '{slnFilePath.FullPath}' already contains solution folder named " +
                     $"'{solutionFolderName}' with path '{currentSolutionFolderPath}' " +
                     $"(expecting path '{solutionFolderPath}')");
             }

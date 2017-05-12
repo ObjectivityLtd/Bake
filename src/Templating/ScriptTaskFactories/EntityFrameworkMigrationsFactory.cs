@@ -9,13 +9,9 @@ using System.Linq;
 
 namespace Cake.CD.Templating.ScriptTaskFactories
 {
-    public class EntityFrameworkMigrationsFactory : IScriptTaskFactory
+    public class EntityFrameworkMigrationsFactory : AbstractScriptTaskFactory
     {
-        public int ParsingOrder => 0;
-
-        public bool IsTerminating => false;
-
-        public bool IsApplicable(ProjectInfo projectInfo)
+        public override bool IsApplicable(ProjectInfo projectInfo)
         {
             if (!projectInfo.IsCSharpLibraryProject())
             {
@@ -36,7 +32,7 @@ namespace Cake.CD.Templating.ScriptTaskFactories
 
         }
 
-        public IEnumerable<IScriptTask> Create(ProjectInfo projectInfo)
+        public override IEnumerable<IScriptTask> Create(ProjectInfo projectInfo)
         {
             var sourceFile = projectInfo.Project.Path;
             var sourceDir = sourceFile.GetDirectory();

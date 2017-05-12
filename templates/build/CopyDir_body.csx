@@ -8,8 +8,8 @@ Task(""{task.Name}"")
     .Description(""Copies package {packageName}"")
     .Does(() =>
     {{
-        var srcDir = ""{sourceDir.FullPath}"";
-        var dstDir = outputDir + ""{packageName}"";
+        var srcDir = Directory(""{sourceDir.FullPath}"");
+        var dstDir = outputDir + Directory(""{packageName}"");
 
         CopyDirectory(srcDir, dstDir);
     }});

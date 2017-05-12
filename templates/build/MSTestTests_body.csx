@@ -7,9 +7,10 @@ $@"Task(""{task.Name}"")
     .Description(""Runs mstest tests for {solutionName}"")
     .IsDependentOn(""BuildBackend"")
     .Does(() =>
-{{
-    MSTest($""{solutionDir.FullPath}/**/bin/{{configuration}}/*.Tests.dll"", new MSTestSettings {{
+    {{
+        var solutionDir = ""solutionDir.FullPath"";
+        MSTest(solutionDir + ""/**/bin/{{configuration}}/*.Tests.dll"", new MSTestSettings {{
         
+        }});
     }});
-}});
 "

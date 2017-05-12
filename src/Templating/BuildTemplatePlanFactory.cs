@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Cake.CD.Command;
+﻿using Cake.CD.Command;
 using Cake.CD.Logging;
 using Cake.CD.MsBuild;
 using Cake.CD.Templating.ScriptTaskFactories;
@@ -11,7 +8,9 @@ using Cake.Common.Solution;
 using Cake.Common.Solution.Project;
 using Cake.Core.IO;
 using Serilog;
-using Serilog.Context;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace Cake.CD.Templating
 {
@@ -22,7 +21,7 @@ namespace Cake.CD.Templating
 
         private ProjectParser projectParser;
 
-        private IEnumerable<IScriptTaskFactory> scriptTaskFactories;
+        private List<IScriptTaskFactory> scriptTaskFactories;
 
         private TemplateFileProvider templateFileProvider;
 
@@ -53,10 +52,14 @@ namespace Cake.CD.Templating
 
         private BuildCake ParseSolution(BuildCake buildCakeTask, FilePath slnFilePath)
         {
-            Log.Information("Parsing solution {SlnFile}.", new DirectoryPath(Directory.GetCurrentDirectory()).GetRelativePath(slnFilePath));
+            var relativeSlnDir = new DirectoryPath(Directory.GetCurrentDirectory()).GetRelativePath(slnFilePath);
+            LogHelper.LogHeader("Exploring projects - parsing solution {SlnFile}.", relativeSlnDir.FullPath);
             LogHelper.IncreaseIndent();
             var solutionParserResult = solutionParser.Parse(slnFilePath);
             var buildCakeScriptTasks = new List<IScriptTask>();
+            var projectInfo = new ProjectInfo(slnFilePath, null, null);
+            var solutionScriptTasks = CreateScriptTasks(projectInfo, true);
+            buildCakeScriptTasks.AddRange(solutionScriptTasks);
             foreach (var project in solutionParserResult.Projects)
             {
                 if (project.Type == null || !MsBuildGuids.IsSupportedSlnTypeIdentifier(project.Type))
@@ -98,7 +101,7 @@ namespace Cake.CD.Templating
                     return new List<IScriptTask>();
                 }
                 var projectInfo = new ProjectInfo(solutionFilePath, project, projectParserResult);
-                return CreateScriptTasks(projectInfo);
+                return CreateScriptTasks(projectInfo, false);
             }
             finally
             {
@@ -106,13 +109,20 @@ namespace Cake.CD.Templating
             }
         }
 
-        private IEnumerable<IScriptTask> CreateScriptTasks(ProjectInfo projectInfo)
+        private IEnumerable<IScriptTask> CreateScriptTasks(ProjectInfo projectInfo, bool solutionLevel)
         {
             var result = new List<IScriptTask>();
-            foreach (var scriptTaskFactory in scriptTaskFactories.Where(stf => stf.IsApplicable(projectInfo)))
+            foreach (var scriptTaskFactory in scriptTaskFactories.Where(stf => stf.IsSolutionLevel == solutionLevel && stf.IsApplicable(projectInfo)))
             {
                 var projectType = scriptTaskFactory.GetType().Name.Replace("Factory", "");
-                Log.Information("Recognized project to be {ProjectType}.", projectType);
+                if (solutionLevel)
+                {
+                    Log.Information("Preparing solution-level task {Task}.", projectType);
+                }
+                else
+                {
+                    Log.Information("Recognized project to be {ProjectType}.", projectType);
+                }
                 var scriptTasks = scriptTaskFactory.Create(projectInfo);
                 result.AddRange(scriptTasks);
                 if (scriptTaskFactory.IsTerminating)
