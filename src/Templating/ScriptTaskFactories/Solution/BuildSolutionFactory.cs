@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Cake.CD.Templating.Steps.Build;
+using Cake.Core.IO;
 
 namespace Cake.CD.Templating.ScriptTaskFactories.Solution
 {
@@ -15,20 +16,20 @@ namespace Cake.CD.Templating.ScriptTaskFactories.Solution
         public override IEnumerable<IScriptTask> Create(SolutionInfo solutionInfo)
         {
             var solutionName = solutionInfo.SolutionFilePath.GetFilenameWithoutExtension().FullPath;
-            /*return new List<IScriptTask>
+            var result = new List<IScriptTask>();
+            if (solutionInfo.BuildSolution)
             {
-                new MsBuildTask(
+                result.Add(new MsBuildTask(
                     taskType: MsBuildTask.MsBuildTaskType.Solution,
-                    sourceFile: projectInfo.SolutionFilePath,
-                    projectName: solutionName,
-                    createPackage: false,
-                    restoreNuget: true,
-                    autoParameterizeWebConfig: false)
-            };*/
-            return new List<IScriptTask>
+                    sourceFiles: new List<FilePath> { solutionInfo.SolutionFilePath },
+                    projectName: solutionName
+                ));
+            }
+            else
             {
-                new RestoreNugetTask(solutionName)
-            };
+                result.Add(new RestoreNugetTask(solutionName));
+            }
+            return result;
         }
     }
 }

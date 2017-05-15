@@ -7,5 +7,7 @@ namespace Cake.CD.Command
         public FilePath SolutionFilePath;
 
         public bool Overwrite;
+
+        public bool BuildSolution;
     }
 }

@@ -1,9 +1,10 @@
 ﻿using Cake.CD.Templating.Steps.Build;
 using System.Collections.Generic;
+using Cake.Core.IO;
 
 namespace Cake.CD.Templating.ScriptTaskFactories.Project
 {
-    public class WebApplicationFactory :  AbstractProjectScriptTaskFactory
+    public class WebApplicationFactory : AbstractProjectScriptTaskFactory
     {
         public override bool IsApplicable(ProjectInfo projectInfo)
         {
@@ -12,15 +13,12 @@ namespace Cake.CD.Templating.ScriptTaskFactories.Project
 
         public override IEnumerable<IScriptTask> Create(ProjectInfo projectInfo)
         {
-            var restoreNuget = projectInfo.SolutionInfo == null;
             return new List<IScriptTask>
             {
                 new MsBuildTask(
-                    taskType: MsBuildTask.MsBuildTaskType.WebApplication, 
-                    sourceFile: projectInfo.Project.Path, 
-                    projectName: projectInfo.Project.Name, 
-                    createPackage: true, 
-                    restoreNuget: restoreNuget)
+                    taskType: MsBuildTask.MsBuildTaskType.WebApplication,
+                    sourceFiles: new List<FilePath> { projectInfo.Project.Path },
+                    projectName: projectInfo.Project.Name)
             };
         }
     }

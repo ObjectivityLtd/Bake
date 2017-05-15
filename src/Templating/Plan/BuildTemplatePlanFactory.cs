@@ -1,11 +1,8 @@
 ﻿using Cake.CD.Command;
 using Cake.CD.Logging;
-using Cake.CD.MsBuild;
 using Cake.CD.Templating.ScriptTaskFactories;
 using Cake.CD.Templating.Steps;
 using Cake.CD.Templating.Steps.Build;
-using Cake.Common.Solution;
-using Cake.Common.Solution.Project;
 using Cake.Core.IO;
 using Serilog;
 using System.Collections.Generic;
@@ -55,7 +52,7 @@ namespace Cake.CD.Templating.Plan
             var relativeSlnDir = new DirectoryPath(Directory.GetCurrentDirectory()).GetRelativePath(initOptions.SolutionFilePath);
             LogHelper.LogHeader("Exploring projects - parsing solution {SlnFile}.", relativeSlnDir.FullPath);
             LogHelper.IncreaseIndent();
-            var solutionInfo = solutionInfoProvider.ParseSolution(initOptions.SolutionFilePath);
+            var solutionInfo = solutionInfoProvider.ParseSolution(initOptions);
             var solutionLevelTasks = CreateSolutionLevelTasks(solutionInfo);
             var projectLevelTasks = CreateProjectLevelTasks(solutionInfo);
             buildCakeTask.AddScriptTasks(solutionLevelTasks);
@@ -106,7 +103,7 @@ namespace Cake.CD.Templating.Plan
             foreach (var scriptTaskFactory in projectScriptTaskFactories.Where(stf => stf.IsApplicable(projectInfo)))
             {
                 var projectType = scriptTaskFactory.GetType().Name.Replace("Factory", "");
-                Log.Information("Recognized project to be {ProjectType}.", projectType);
+                Log.Information("Found {ProjectType} project at {ProjectPath}.", projectType, new DirectoryPath(Directory.GetCurrentDirectory()).GetRelativePath(projectInfo.Project.Path));
                 var scriptTasks = scriptTaskFactory.Create(projectInfo);
                 result.AddRange(scriptTasks);
             }

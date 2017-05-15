@@ -20,7 +20,6 @@ namespace Cake.CD.Templating.Plan
 
         public ProjectInfo ParseProject(SolutionInfo solutionInfo, SolutionProject project)
         {
-            Log.Information("Parsing project {ProjectFile}.", new DirectoryPath(Directory.GetCurrentDirectory()).GetRelativePath(project.Path));
             LogHelper.IncreaseIndent();
             try
             {

@@ -5,6 +5,7 @@ using Cake.Common.Solution;
 using Cake.Core.IO;
 using System.Collections.Generic;
 using System.IO;
+using Cake.CD.Command;
 
 namespace Cake.CD.Templating.Plan
 {
@@ -20,11 +21,11 @@ namespace Cake.CD.Templating.Plan
             this.projectScriptTasksFactory = projectScriptTasksFactory;
         }
 
-        public SolutionInfo ParseSolution(FilePath slnFilePath)
+        public SolutionInfo ParseSolution(InitOptions initOptions)
         {
-            var solutionParserResult = solutionParser.Parse(slnFilePath);
+            var solutionParserResult = solutionParser.Parse(initOptions.SolutionFilePath);
             List<ProjectInfo> projects = new List<ProjectInfo>();
-            var solutionInfo = new SolutionInfo(slnFilePath, projects);
+            var solutionInfo = new SolutionInfo(initOptions.SolutionFilePath, initOptions.BuildSolution, projects);
             foreach (var project in solutionParserResult.Projects)
             {
                 if (project.Type == null || !MsBuildGuids.IsSupportedSlnTypeIdentifier(project.Type))

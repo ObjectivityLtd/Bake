@@ -15,6 +15,7 @@ namespace Cake.CD.Scripting
             var options = ScriptOptions.Default
                 .AddReferences(typeof(IScriptTask).GetTypeInfo().Assembly)
                 .AddImports("System")
+                .AddImports("System.Linq")
                 .AddImports("System.Environment")
                 .AddImports("System.IO")
                 .AddImports("System.Collections.Generic")

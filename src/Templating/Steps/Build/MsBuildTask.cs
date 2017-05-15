@@ -1,4 +1,5 @@
-﻿using Cake.Core.IO;
+﻿using System.Collections.Generic;
+using Cake.Core.IO;
 
 namespace Cake.CD.Templating.Steps.Build
 {
@@ -9,30 +10,28 @@ namespace Cake.CD.Templating.Steps.Build
         {
             Solution,
             WebApplication,
-            ConsoleApplication
+            ConsoleApplication,
+            UnitTests,
+            UiTests
         }
 
-        public string Name => "Build " + this.SourceFile.GetFilenameWithoutExtension().FullPath;
+        public string Name => "Build " + ProjectName;
 
-        public ScriptTaskType Type => ScriptTaskType.BuildBackend;
-
+        public ScriptTaskType Type => TaskType == MsBuildTaskType.UiTests ? ScriptTaskType.BuildIntegrationTests : ScriptTaskType.BuildBackend;
+        
         public MsBuildTaskType TaskType { get; }
 
-        public FilePath SourceFile { get; }
+        public IEnumerable<FilePath> SourceFiles { get; }
 
         public string ProjectName { get; }
 
-        public bool RestoreNuget { get; }
+        public bool CreateMsDeployPackage => TaskType == MsBuildTaskType.WebApplication;
 
-        public bool CreatePackage { get; }
-
-        public MsBuildTask(MsBuildTaskType taskType, FilePath sourceFile, string projectName, bool createPackage, bool restoreNuget)
+        public MsBuildTask(MsBuildTaskType taskType, IEnumerable<FilePath> sourceFiles, string projectName)
         {
             this.TaskType = taskType;
-            this.SourceFile = sourceFile;
+            this.SourceFiles = sourceFiles;
             this.ProjectName = projectName;
-            this.RestoreNuget = restoreNuget;
-            this.CreatePackage = createPackage;
         }
 
     }

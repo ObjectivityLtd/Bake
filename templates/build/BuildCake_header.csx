@@ -25,7 +25,7 @@ if (task.HasMsBuildSteps)
 var defaultMsBuildCommonSettings = new MSBuildSettings {{
         Configuration = configuration,
         Verbosity = Verbosity.Minimal,
-        ToolVersion = MSBuildToolVersion.VS2015,
+        //ToolVersion = MSBuildToolVersion.VS2017,
         PlatformTarget = PlatformTarget.MSIL,
         NodeReuse = !isRunningOnCIServer,
         MaxCpuCount = 0
@@ -54,6 +54,7 @@ Teardown(taskTeardownContext =>
     // Executed AFTER the last task.
     Information(""Finished running tasks."");
 }});
+
 ";
 
 result
