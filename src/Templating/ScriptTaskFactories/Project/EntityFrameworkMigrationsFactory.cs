@@ -1,5 +1,4 @@
-﻿using Cake.CD.MsBuild;
-using Cake.CD.Templating.Steps.Build;
+﻿using Cake.CD.Templating.Steps.Build;
 using Cake.Common.Solution.Project;
 using Cake.Core.IO;
 using Serilog;
@@ -7,10 +6,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Cake.CD.Templating.ScriptTaskFactories
+namespace Cake.CD.Templating.ScriptTaskFactories.Project
 {
-    public class EntityFrameworkMigrationsFactory : AbstractScriptTaskFactory
+    public class EntityFrameworkMigrationsFactory : AbstractProjectScriptTaskFactory
     {
+        public override int ParsingOrder => 20;
+
         public override bool IsApplicable(ProjectInfo projectInfo)
         {
             if (!projectInfo.IsCSharpLibraryProject())

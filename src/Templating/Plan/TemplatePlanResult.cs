@@ -3,7 +3,7 @@ using Cake.Core.IO;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Cake.CD.Templating
+namespace Cake.CD.Templating.Plan
 {
     public class TemplatePlanResult
     {

@@ -1,5 +1,6 @@
 using Cake.CD.Templating;
 using System.Collections.Generic;
+using Cake.CD.Templating.Plan;
 
 namespace Cake.CD.Command
 {

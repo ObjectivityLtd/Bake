@@ -8,7 +8,7 @@ namespace Cake.CD.Templating.ScriptTaskFactories
 {
     public class ProjectInfo
     {
-        public FilePath SolutionFilePath { get; }
+        public SolutionInfo SolutionInfo { get; }
 
         public DirectoryPath ProjectDirectoryPath
         {
@@ -34,9 +34,9 @@ namespace Cake.CD.Templating.ScriptTaskFactories
 
         public ProjectParserResult ParserResult { get; }
 
-        public ProjectInfo(FilePath solutionFilePath, SolutionProject project, ProjectParserResult parserResult)
+        public ProjectInfo(SolutionInfo solutionInfo, SolutionProject project, ProjectParserResult parserResult)
         {
-            this.SolutionFilePath = solutionFilePath;
+            this.SolutionInfo = solutionInfo;
             this.Project = project;
             this.ParserResult = parserResult;
         }
@@ -53,7 +53,7 @@ namespace Cake.CD.Templating.ScriptTaskFactories
 
         public bool IsWebsite()
         {
-            return MsBuildGuids.IsWebSite(Project.Type);
+            return Project != null && MsBuildGuids.IsWebSite(Project.Type);
         }
 
         public bool IsCSharpLibraryProject()

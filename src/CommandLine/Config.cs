@@ -21,7 +21,7 @@ namespace Cake.CD.CommandLine
 
             builder
                 .RegisterAssemblyTypes(typeof(Program).GetTypeInfo().Assembly)
-                .Where(t => typeof(IScriptTaskFactory).IsAssignableFrom(t))
+                .Where(t => typeof(IProjectScriptTaskFactory).IsAssignableFrom(t) || typeof(ISolutionScriptTaskFactory).IsAssignableFrom(t))
                 .SingleInstance()
                 .AsImplementedInterfaces();
 

@@ -2,9 +2,9 @@
 using Newtonsoft.Json.Linq;
 using Serilog;
 
-namespace Cake.CD.Templating.ScriptTaskFactories
+namespace Cake.CD.Templating.ScriptTaskFactories.Project
 {
-    public abstract class AbstractNpmTaskFactory : AbstractScriptTaskFactory
+    public abstract class AbstractNpmTaskFactory : AbstractProjectScriptTaskFactory
     {
         protected bool IsPackageJsonPresent(DirectoryPath projectDir)
         {

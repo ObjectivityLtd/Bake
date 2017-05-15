@@ -1,19 +1,13 @@
-using Cake.CD.Templating;
-using Cake.Core.IO;
-using System;
+using Cake.CD.Templating.Plan;
 
 namespace Cake.CD.Command
 {
     public class GenerateBuildScriptsCommand
     {
-
-        private TemplateFileProvider templateFileProvider;
-
         private BuildTemplatePlanFactory templatePlanFactory;
 
-        public GenerateBuildScriptsCommand(TemplateFileProvider templateFileProvider, BuildTemplatePlanFactory templatePlanFactory)
+        public GenerateBuildScriptsCommand(BuildTemplatePlanFactory templatePlanFactory)
         {
-            this.templateFileProvider = templateFileProvider;
             this.templatePlanFactory = templatePlanFactory;
         }
 

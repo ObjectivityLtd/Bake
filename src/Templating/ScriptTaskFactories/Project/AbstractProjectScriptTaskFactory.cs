@@ -1,14 +1,10 @@
 ﻿using System.Collections.Generic;
 
-namespace Cake.CD.Templating.ScriptTaskFactories
+namespace Cake.CD.Templating.ScriptTaskFactories.Project
 {
-    public abstract class AbstractScriptTaskFactory : IScriptTaskFactory
+    public abstract class AbstractProjectScriptTaskFactory : IProjectScriptTaskFactory
     {
         public virtual int ParsingOrder => 10;
-
-        public virtual bool IsTerminating => false;
-
-        public virtual bool IsSolutionLevel => false;
 
         public abstract bool IsApplicable(ProjectInfo projectInfo);
 

@@ -1,9 +1,9 @@
 ﻿using Cake.CD.Templating.Steps.Build;
 using System.Collections.Generic;
 
-namespace Cake.CD.Templating.ScriptTaskFactories
+namespace Cake.CD.Templating.ScriptTaskFactories.Project
 {
-    public class ConsoleApplicationFactory : AbstractScriptTaskFactory
+    public class ConsoleApplicationFactory : AbstractProjectScriptTaskFactory
     {
         public override bool IsApplicable(ProjectInfo projectInfo)
         {
@@ -12,7 +12,7 @@ namespace Cake.CD.Templating.ScriptTaskFactories
 
         public override IEnumerable<IScriptTask> Create(ProjectInfo projectInfo)
         {
-            var restoreNuget = projectInfo.SolutionFilePath == null;
+            var restoreNuget = projectInfo.SolutionInfo == null;
             return new List<IScriptTask>
             {
                 new MsBuildTask(

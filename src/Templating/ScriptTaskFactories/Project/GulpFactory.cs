@@ -1,11 +1,12 @@
 ﻿using Cake.CD.Templating.Steps.Build;
-using Cake.Core.IO;
 using System.Collections.Generic;
 
-namespace Cake.CD.Templating.ScriptTaskFactories
+namespace Cake.CD.Templating.ScriptTaskFactories.Project
 {
     public class GulpFactory : AbstractNpmTaskFactory
     {
+        public override int ParsingOrder => 30;
+
         public override bool IsApplicable(ProjectInfo projectInfo)
         {
             if (!projectInfo.IsWebsite())

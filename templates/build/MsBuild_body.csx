@@ -12,7 +12,7 @@ Task(""{task.Name}"")
 if (task.CreatePackage)
 {
     result += $@"
-        var outputZip = outputDir + Directory(""{task.ProjectName}"") + File(""{task.ProjectName}.zip"");";
+        var outputZip = outputDir + File(""{task.ProjectName}/{task.ProjectName}.zip"");";
 }
 
 if (task.RestoreNuget)

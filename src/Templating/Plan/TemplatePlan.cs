@@ -1,10 +1,9 @@
-﻿using Cake.CD.Templating.Steps;
+﻿using Cake.CD.Logging;
+using Cake.CD.Templating.Steps;
 using Serilog;
 using System.Collections.Generic;
-using Cake.CD.Logging;
-using Serilog.Context;
 
-namespace Cake.CD.Templating
+namespace Cake.CD.Templating.Plan
 {
     public class TemplatePlan
     {
