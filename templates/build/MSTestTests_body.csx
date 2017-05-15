@@ -5,11 +5,10 @@ var solutionName = SolutionFilePath.GetFilenameWithoutExtension();
 
 $@"Task(""{task.Name}"")
     .Description(""Runs mstest tests for {solutionName}"")
-    .IsDependentOn(""BuildBackend"")
     .Does(() =>
     {{
-        var solutionDir = ""solutionDir.FullPath"";
-        MSTest(solutionDir + ""/**/bin/{{configuration}}/*.Tests.dll"", new MSTestSettings {{
+        var solutionDir = ""{solutionDir.FullPath}"";
+        MSTest(solutionDir + ""/**/bin/"" + configuration + ""/*.Tests.dll"", new MSTestSettings {{
         
         }});
     }});

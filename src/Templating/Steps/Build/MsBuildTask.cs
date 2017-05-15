@@ -7,6 +7,7 @@ namespace Cake.CD.Templating.Steps.Build
 
         public enum MsBuildTaskType
         {
+            Solution,
             WebApplication,
             ConsoleApplication
         }
@@ -21,11 +22,17 @@ namespace Cake.CD.Templating.Steps.Build
 
         public string ProjectName { get; }
 
-        public MsBuildTask(MsBuildTaskType taskType, FilePath sourceFile, string projectName)
+        public bool RestoreNuget { get; }
+
+        public bool CreatePackage { get; }
+
+        public MsBuildTask(MsBuildTaskType taskType, FilePath sourceFile, string projectName, bool createPackage, bool restoreNuget)
         {
             this.TaskType = taskType;
             this.SourceFile = sourceFile;
             this.ProjectName = projectName;
+            this.RestoreNuget = restoreNuget;
+            this.CreatePackage = createPackage;
         }
 
     }

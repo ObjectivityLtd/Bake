@@ -2,22 +2,37 @@ var task = CurrentTask as MsBuildTask;
 
 var projectPath = BuildScriptPath.GetRelativePath(task.SourceFile).FullPath;
 
-$@"
+var result = $@"
 Task(""{task.Name}"")
     .Description(""Builds {task.TaskType} package {task.ProjectName}"")
     .Does(() =>
     {{
-        var projectPath = File(""{projectPath}"");
-        var outputZip = outputDir + File(""{task.ProjectName}.zip"");
+        var projectPath = File(""{projectPath}"");";
 
-        // NuGetRestore(projectPath);
+if (task.CreatePackage)
+{
+    result += $@"
+        var outputZip = outputDir + Directory(""{task.ProjectName}"") + File(""{task.ProjectName}.zip"");";
+}
 
-        MSBuild(projectPath, settings =>
-            settings.WithProperty(""DeployTarget"", ""Package"")
-                    .WithProperty(""DeployOnBuild"", ""True"")
-                    .WithProperty(""AutoParameterizationWebConfigConnectionStrings"", ""false"")
-                    .WithProperty(""PackageLocation"", outputZip)
-                    .SetConfiguration(configuration)
-                    .SetNodeReuse(false));
-    }});
-"
+if (task.RestoreNuget)
+{
+    result += $@"
+        NuGetRestore(projectPath);";
+}
+
+if (task.CreatePackage)
+{
+    result += $@"
+        MSBuild(projectPath, defaultMsBuildPackageSettings.WithProperty(""PackageLocation"", outputZip));";
+} else
+{
+    result += $@"
+        MSBuild(projectPath, defaultMsBuildCommonSettings);";
+}
+
+result += $@"
+    }});";
+
+
+return result;

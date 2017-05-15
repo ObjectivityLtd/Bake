@@ -11,13 +11,9 @@ Task(""{task.Name}"")
         var projectDir = projectPath.Path.GetDirectory();
         var outDir = outputDir + Directory(""Migrations.{task.ProjectName}"");
 
-        MSBuild(projectPath, settings =>
-            settings.WithProperty(""OutDir"", outDir)
-                    .SetConfiguration(configuration)
-                    .SetNodeReuse(false)
-        );
+        MSBuild(projectPath, defaultMsBuildCommonSettings.WithTarget(""Build"").WithProperty(""OutDir"", outDir));
 
-        CopyFileToDirectory(projectDir + ""{task.EntityFrameworkDllFilePath}"", outputDir);
-        CopyFileToDirectory(projectDir + ""{task.EntityFrameworkMigrateFilePath}"", outputDir);
+        CopyFileToDirectory(projectDir + ""/{task.EntityFrameworkDllFilePath}"", outDir);
+        CopyFileToDirectory(projectDir + ""/{task.EntityFrameworkMigrateFilePath}"", outDir);
     }});
 "

@@ -6,6 +6,8 @@ namespace Cake.CD.Templating.ScriptTaskFactories
 {
     public class MsTestTestsFactory : AbstractScriptTaskFactory
     {
+        public override bool IsSolutionLevel => true;
+
         public override bool IsApplicable(ProjectInfo projectInfo)
         {
             var parserResult = projectInfo.ParserResult;

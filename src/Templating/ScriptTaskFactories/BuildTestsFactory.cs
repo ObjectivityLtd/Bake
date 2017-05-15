@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Cake.CD.Templating.ScriptTaskFactories
 {
-    public class WebDriverTestsFactory : AbstractScriptTaskFactory
+    public class BuildTestsFactory : AbstractScriptTaskFactory
     {
         public override int ParsingOrder => 0;
 
@@ -11,14 +11,19 @@ namespace Cake.CD.Templating.ScriptTaskFactories
 
         public override bool IsApplicable(ProjectInfo projectInfo)
         {
-            return projectInfo.IsUnitTestProject() && projectInfo.FindReference("WebDriver") != null;
+            if (!projectInfo.IsUnitTestProject())
+            {
+                return false;
+            }
+            return projectInfo.FindReference("WebDriver") != null;
         }
 
         public override IEnumerable<IScriptTask> Create(ProjectInfo projectInfo)
         {
+            var restoreNuget = projectInfo.SolutionFilePath == null;
             return new List<IScriptTask>
             {
-                new WebDriverTestsTask(projectInfo.Project.Path, projectInfo.Project.Name)
+                new WebDriverTestsTask(projectInfo.Project.Path, projectInfo.Project.Name, restoreNuget)
             };
         }
     }

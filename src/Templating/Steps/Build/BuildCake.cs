@@ -2,6 +2,7 @@
 using Serilog;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Cake.CD.Logging;
 
 namespace Cake.CD.Templating.Steps.Build
@@ -17,6 +18,10 @@ namespace Cake.CD.Templating.Steps.Build
         public string Name => "build.cake";
 
         public ScriptTaskType Type => ScriptTaskType.Entry;
+
+        public bool AutoParameterizeWebConfig => false;
+
+        public bool HasMsBuildSteps => scriptState.ScriptTasks.Any(scriptTask => scriptTask is MsBuildTask);
 
         public BuildCake(ScriptTaskEvaluator scriptTaskEvaluator, InitOptions initOptions)
         {

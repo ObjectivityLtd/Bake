@@ -5,6 +5,8 @@ namespace Cake.CD.Templating.ScriptTaskFactories
 {
     public class XUnitTestsFactory : AbstractScriptTaskFactory
     {
+        public override bool IsSolutionLevel => true;
+
         public override bool IsApplicable(ProjectInfo projectInfo)
         {
             return projectInfo.FindReference("xunit") != null;

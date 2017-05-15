@@ -12,9 +12,15 @@ namespace Cake.CD.Templating.ScriptTaskFactories
 
         public override IEnumerable<IScriptTask> Create(ProjectInfo projectInfo)
         {
+            var restoreNuget = projectInfo.SolutionFilePath == null;
             return new List<IScriptTask>
             {
-                new MsBuildTask(MsBuildTask.MsBuildTaskType.ConsoleApplication, projectInfo.Project.Path, projectInfo.Project.Name)
+                new MsBuildTask(
+                    taskType: MsBuildTask.MsBuildTaskType.ConsoleApplication,
+                    sourceFile: projectInfo.Project.Path,
+                    projectName: projectInfo.Project.Name,
+                    createPackage: true,
+                    restoreNuget: restoreNuget)
             };
         }
     }
