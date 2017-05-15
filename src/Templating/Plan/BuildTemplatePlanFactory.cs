@@ -32,8 +32,8 @@ namespace Cake.CD.Templating.Plan
             ScriptTaskEvaluator scriptTaskEvaluator)
         {
             this.solutionInfoProvider = solutionInfoProvider;
-            this.solutionScriptTaskFactories = solutionScriptTaskFactories.OrderBy(stf => stf.ParsingOrder).ToList();
-            this.projectScriptTaskFactories = projectScriptTaskFactories.OrderBy(stf => stf.ParsingOrder).ToList();
+            this.solutionScriptTaskFactories = solutionScriptTaskFactories.OrderBy(stf => stf.Order).ToList();
+            this.projectScriptTaskFactories = projectScriptTaskFactories.OrderBy(stf => stf.Order).ToList();
             this.templateFileProvider = templateFileProvider;
             this.scriptTaskEvaluator = scriptTaskEvaluator;
             
@@ -53,10 +53,10 @@ namespace Cake.CD.Templating.Plan
             LogHelper.LogHeader("Exploring projects - parsing solution {SlnFile}.", relativeSlnDir.FullPath);
             LogHelper.IncreaseIndent();
             var solutionInfo = solutionInfoProvider.ParseSolution(initOptions);
-            var solutionLevelTasks = CreateSolutionLevelTasks(solutionInfo);
-            var projectLevelTasks = CreateProjectLevelTasks(solutionInfo);
-            buildCakeTask.AddScriptTasks(solutionLevelTasks);
-            buildCakeTask.AddScriptTasks(projectLevelTasks);
+            var tasks = new List<IScriptTask>();
+            tasks.AddRange(CreateSolutionLevelTasks(solutionInfo));
+            tasks.AddRange(CreateProjectLevelTasks(solutionInfo));
+            buildCakeTask.AddScriptTasks(tasks.OrderBy(task => task.Type.TaskOrder));
             LogHelper.DecreaseIndent();
             return templatePlan;
         }
@@ -72,7 +72,8 @@ namespace Cake.CD.Templating.Plan
         private IEnumerable<IScriptTask> CreateSolutionLevelTasks(SolutionInfo solutionInfo)
         {
             var result = new List<IScriptTask>();
-            foreach (var scriptTaskFactory in solutionScriptTaskFactories.Where(stf => stf.IsApplicable(solutionInfo)))
+            var scriptTaskFactories = solutionScriptTaskFactories.Where(stf => stf.IsApplicable(solutionInfo)).OrderBy(stf => stf.Order);
+            foreach (var scriptTaskFactory in scriptTaskFactories)
             {
                 var projectType = scriptTaskFactory.GetType().Name.Replace("Factory", "");
                 Log.Information("Preparing solution-level task {Task}.", projectType);
@@ -80,7 +81,7 @@ namespace Cake.CD.Templating.Plan
                 var uniqueTasks = GetNewUniqueScriptTasks(result, scriptTasks);
                 result.AddRange(uniqueTasks);
             }
-            return result.OrderBy(task => task.Type.TaskOrder);
+            return result;
         }
 
 
@@ -94,20 +95,21 @@ namespace Cake.CD.Templating.Plan
                 result.AddRange(uniqueTasks);
 
             }
-            return result.OrderBy(task => task.Type.TaskOrder);
+            return result;
         }
 
         private IEnumerable<IScriptTask> CreateProjectTasks(ProjectInfo projectInfo)
         {
             var result = new List<IScriptTask>();
-            foreach (var scriptTaskFactory in projectScriptTaskFactories.Where(stf => stf.IsApplicable(projectInfo)))
+            var scriptTaskFactories = projectScriptTaskFactories.Where(stf => stf.IsApplicable(projectInfo)).OrderBy(stf => stf.Order);
+            foreach (var scriptTaskFactory in scriptTaskFactories)
             {
                 var projectType = scriptTaskFactory.GetType().Name.Replace("Factory", "");
                 Log.Information("Found {ProjectType} project at {ProjectPath}.", projectType, new DirectoryPath(Directory.GetCurrentDirectory()).GetRelativePath(projectInfo.Project.Path));
                 var scriptTasks = scriptTaskFactory.Create(projectInfo);
                 result.AddRange(scriptTasks);
             }
-            return result.OrderBy(task => task.Type.TaskOrder);
+            return result;
         }
 
         private IEnumerable<IScriptTask> GetNewUniqueScriptTasks(IEnumerable<IScriptTask> existingScriptTasks, IEnumerable<IScriptTask> newScriptTasks)

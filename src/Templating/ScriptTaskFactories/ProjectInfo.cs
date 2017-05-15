@@ -74,6 +74,11 @@ namespace Cake.CD.Templating.ScriptTaskFactories
                     || FindReference("xunit") != null);
         }
 
+        public bool IsWebDriverProject()
+        {
+            return FindReference("WebDriver") != null;
+        }
+
         public ProjectAssemblyReference FindReference(string namePrefix)
         {
             return ParserResult?.References.FirstOrDefault(r => r.Include != null && r.Include.StartsWith(namePrefix));

@@ -9,7 +9,7 @@ Task(""{task.Name}"")
     .Does(() =>
     {{
         var solutionDir = ""{solutionDir.FullPath}"";
-        NUnit3(solutionDir + ""/**/bin/"" + configuration + ""/*.Tests.dll"", new NUnit3Settings {{
+        NUnit3(solutionDir + ""/**/bin/"" + configuration + ""/*.Test*.dll"", new NUnit3Settings {{
             NoResults = true
         }});
     }});

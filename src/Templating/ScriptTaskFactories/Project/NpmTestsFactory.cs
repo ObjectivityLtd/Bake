@@ -5,7 +5,7 @@ namespace Cake.CD.Templating.ScriptTaskFactories.Project
 {
     public class NpmTestsFactory : AbstractNpmTaskFactory
     {
-        public override int ParsingOrder => 31;
+        public override int Order => 31;
 
         public override bool IsApplicable(ProjectInfo projectInfo)
         {

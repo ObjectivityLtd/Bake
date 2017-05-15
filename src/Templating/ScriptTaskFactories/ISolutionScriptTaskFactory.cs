@@ -4,7 +4,7 @@ namespace Cake.CD.Templating.ScriptTaskFactories
 {
     public interface ISolutionScriptTaskFactory
     {
-        int ParsingOrder { get; }
+        int Order { get; }
 
         IEnumerable<IScriptTask> Create(SolutionInfo solutionInfo);
 

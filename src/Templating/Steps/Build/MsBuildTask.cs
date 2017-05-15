@@ -15,10 +15,11 @@ namespace Cake.CD.Templating.Steps.Build
             UiTests
         }
 
-        public string Name => "Build " + ProjectName;
+        public string Name => "Build " + (ProjectName != "" ? ProjectName : TaskType.ToString());
 
-        public ScriptTaskType Type => TaskType == MsBuildTaskType.UiTests ? ScriptTaskType.BuildIntegrationTests : ScriptTaskType.BuildBackend;
+        public ScriptTaskType Type => GetScriptTaskType();
         
+
         public MsBuildTaskType TaskType { get; }
 
         public IEnumerable<FilePath> SourceFiles { get; }
@@ -32,6 +33,16 @@ namespace Cake.CD.Templating.Steps.Build
             this.TaskType = taskType;
             this.SourceFiles = sourceFiles;
             this.ProjectName = projectName;
+        }
+
+        private ScriptTaskType GetScriptTaskType()
+        {
+            switch (TaskType)
+            {
+                case MsBuildTaskType.UiTests: return ScriptTaskType.BuildIntegrationTests;
+                case MsBuildTaskType.UnitTests: return ScriptTaskType.BuildUnitTests;
+                default: return ScriptTaskType.BuildBackend;
+            }
         }
 
     }

@@ -1,5 +1,4 @@
-﻿using Cake.CD.MsBuild;
-using Cake.CD.Templating.Steps.Build;
+﻿using Cake.CD.Templating.Steps.Build;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,6 +6,8 @@ namespace Cake.CD.Templating.ScriptTaskFactories.Solution
 {
     public class BuildTestsFactory : AbstractSolutionScriptTaskFactory
     {
+        public override int Order => 20;
+
         public override bool IsApplicable(SolutionInfo solutionInfo)
         {
             return !solutionInfo.BuildSolution
@@ -15,9 +16,14 @@ namespace Cake.CD.Templating.ScriptTaskFactories.Solution
 
         public override IEnumerable<IScriptTask> Create(SolutionInfo solutionInfo)
         {
+            var testProjects = solutionInfo.Projects.Where(projectInfo => projectInfo.IsUnitTestProject() && !projectInfo.IsWebDriverProject())
+                .Select(projectInfo => projectInfo.Project.Path);
             return new List<IScriptTask>
             {
-                new MsTestTestsTask(solutionInfo.SolutionFilePath.GetFilenameWithoutExtension().FullPath)
+                new MsBuildTask(
+                    taskType: MsBuildTask.MsBuildTaskType.UnitTests,
+                    sourceFiles: testProjects,
+                    projectName: "")
             };
         }
 

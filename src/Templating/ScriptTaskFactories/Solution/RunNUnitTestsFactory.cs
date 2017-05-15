@@ -6,6 +6,8 @@ namespace Cake.CD.Templating.ScriptTaskFactories.Solution
 {
     public class NUnitTestsFactory : AbstractSolutionScriptTaskFactory
     {
+        public override int Order => 21;
+
         public override bool IsApplicable(SolutionInfo solutionInfo)
         {
             return solutionInfo.Projects.Any(projectInfo => projectInfo.FindReference("nunit") != null);

@@ -9,6 +9,10 @@ namespace Cake.CD.Templating.Steps.Build
     {
         public string AddAgregateTasks(IEnumerable<IScriptTask> scriptTasks, ScriptTaskType.Group scriptTaskTypeGroup, string aggregateTaskName)
         {
+            if (string.IsNullOrEmpty(aggregateTaskName))
+            {
+                return "";
+            }
             var sb = new StringBuilder();
             var addedTasks = AppendBuildTasks(sb, scriptTasks, scriptTaskTypeGroup);
             AppendAggregateTask(sb, aggregateTaskName, addedTasks); 

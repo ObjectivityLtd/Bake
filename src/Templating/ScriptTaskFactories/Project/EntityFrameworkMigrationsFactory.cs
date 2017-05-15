@@ -10,7 +10,7 @@ namespace Cake.CD.Templating.ScriptTaskFactories.Project
 {
     public class EntityFrameworkMigrationsFactory : AbstractProjectScriptTaskFactory
     {
-        public override int ParsingOrder => 20;
+        public override int Order => 20;
 
         public override bool IsApplicable(ProjectInfo projectInfo)
         {

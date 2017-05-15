@@ -5,7 +5,7 @@ namespace Cake.CD.Templating.ScriptTaskFactories.Solution
 {
     public class CleanTaskFactory : AbstractSolutionScriptTaskFactory
     {
-        public override int ParsingOrder => 0;
+        public override int Order => 0;
 
         public override bool IsApplicable(SolutionInfo projectInfo)
         {

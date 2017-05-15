@@ -8,7 +8,7 @@ namespace Cake.CD.Templating.ScriptTaskFactories.Project
     {
         public override bool IsApplicable(ProjectInfo projectInfo)
         {
-            return projectInfo.IsUnitTestProject() && projectInfo.FindReference("WebDriver") != null;
+            return projectInfo.IsUnitTestProject() && projectInfo.IsWebDriverProject();
         }
 
         public override IEnumerable<IScriptTask> Create(ProjectInfo projectInfo)

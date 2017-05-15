@@ -5,7 +5,7 @@ namespace Cake.CD.Templating.ScriptTaskFactories.Project
 {
     public class GulpFactory : AbstractNpmTaskFactory
     {
-        public override int ParsingOrder => 30;
+        public override int Order => 30;
 
         public override bool IsApplicable(ProjectInfo projectInfo)
         {

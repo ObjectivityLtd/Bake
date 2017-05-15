@@ -4,7 +4,7 @@ namespace Cake.CD.Templating.ScriptTaskFactories.Project
 {
     public abstract class AbstractProjectScriptTaskFactory : IProjectScriptTaskFactory
     {
-        public virtual int ParsingOrder => 10;
+        public virtual int Order => 10;
 
         public abstract bool IsApplicable(ProjectInfo projectInfo);
 

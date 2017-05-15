@@ -8,7 +8,7 @@ $@"Task(""{task.Name}"")
     .Does(() =>
     {{
         var solutionDir = ""{solutionDir.FullPath}"";
-        MSTest(solutionDir + ""/**/bin/"" + configuration + ""/*.Tests.dll"", new MSTestSettings {{
+        MSTest(solutionDir + ""/**/bin/"" + configuration + ""/*.Test*.dll"", new MSTestSettings {{
         
         }});
     }});
