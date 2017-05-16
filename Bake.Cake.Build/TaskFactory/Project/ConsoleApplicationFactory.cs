@@ -19,8 +19,8 @@ namespace Bake.Cake.Build.TaskFactory.Project
             {
                 new MsBuildTask(
                     taskType: MsBuildTask.MsBuildTaskType.ConsoleApplication,
-                    sourceFiles: new List<FilePath> { projectInfo.Project.Path },
-                    projectName: projectInfo.Project.Name)
+                    sourceFiles: new List<FilePath> { projectInfo.Path },
+                    projectName: projectInfo.Name)
             };
         }
     }

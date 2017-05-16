@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Bake.Cake.Build.TaskFactory.Solution
 {
-    public class MsTestTestsFactory : AbstractSolutionScriptTaskFactory
+    public class RunMsTestTestsFactory : AbstractSolutionScriptTaskFactory
     {
         public override int Order => 21;
 
@@ -15,17 +15,18 @@ namespace Bake.Cake.Build.TaskFactory.Solution
         {
             return solutionInfo.Projects.Any(projectInfo =>
                 projectInfo.ParserResult != null
-                && projectInfo.ParserResult.IsTestProjectType(projectInfo.Project.Path.FullPath)
-                && projectInfo.ParserResult.IsMsTestProject(projectInfo.Project.Path.FullPath)
+                && projectInfo.ParserResult.IsTestProjectType(projectInfo.Path.FullPath)
+                && projectInfo.ParserResult.IsMsTestProject(projectInfo.Path.FullPath)
                 && projectInfo.FindReference("nunit") == null
-                && projectInfo.FindReference("xunit") == null);
+                && projectInfo.FindReference("xunit") == null
+                && !projectInfo.IsWebDriverProject());
         }
 
         public override IEnumerable<ITask> Create(SolutionInfo solutionInfo)
         {
             return new List<ITask>
             {
-                new MsTestTestsTask(solutionInfo.SolutionFilePath.GetFilenameWithoutExtension().FullPath)
+                new MsTestTestsTask(solutionInfo.Name)
             };
         }
 

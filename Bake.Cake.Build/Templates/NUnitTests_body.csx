@@ -1,11 +1,10 @@
 var task = CurrentTask as NUnitTestsTask;
 
-var solutionDir = BuildScriptPath.GetRelativePath(SolutionFilePath.GetDirectory());
-var solutionName = SolutionFilePath.GetFilenameWithoutExtension();
+var solutionDir = BuildScriptPath.GetRelativePath(SolutionDir);
 
 $@"
 Task(""{task.Name}"")
-    .Description(""Runs nunit tests for {solutionName}"")
+    .Description(""Runs nunit tests for {task.SolutionName}"")
     .Does(() =>
     {{
         var solutionDir = ""{solutionDir.FullPath}"";

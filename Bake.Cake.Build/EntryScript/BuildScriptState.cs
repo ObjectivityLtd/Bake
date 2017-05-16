@@ -18,6 +18,8 @@ namespace Bake.Cake.Build.EntryScript
 
         public FilePath SolutionFilePath { get; }
 
+        public DirectoryPath SolutionDir => SolutionFilePath != null ? SolutionFilePath.GetDirectory() : BasePath;
+
         public DirectoryPath BuildScriptPath { get; }
 
         public DirectoryPath OutputPath { get; }
@@ -39,13 +41,13 @@ namespace Bake.Cake.Build.EntryScript
             this.ScriptTasks.AddRange(scriptTasks);
         }
 
-        public string GenerateParts(TaskPart TaskPart, TaskType.Group TaskTypeGroup)
+        public string GenerateParts(TaskPart taskPart, TaskType.Group taskTypeGroup)
         {
             StringBuilder sb = new StringBuilder();
-            foreach (var task in ScriptTasks.Where(scriptTask => scriptTask.Type.TaskGroup == TaskTypeGroup))
+            foreach (var task in ScriptTasks.Where(scriptTask => scriptTask.Type.TaskGroup == taskTypeGroup))
             {
                 this.CurrentTask = task;
-                var part = scriptTaskEvaluator.GeneratePart(task, TaskPart, this);
+                var part = scriptTaskEvaluator.GeneratePart(task, taskPart, this);
                 if (part != null)
                 {
                     sb.AppendLine(part);

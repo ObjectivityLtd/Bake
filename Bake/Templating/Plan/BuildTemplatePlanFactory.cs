@@ -14,7 +14,7 @@ namespace Bake.Templating.Plan
     public class BuildTemplatePlanFactory
     {
 
-        private SolutionInfoProvider solutionInfoProvider;
+        private ProjectInfoProvider projectInfoProvider;
 
         private List<ISolutionScriptTaskFactory> solutionScriptTaskFactories;
 
@@ -25,40 +25,58 @@ namespace Bake.Templating.Plan
         private ScriptTaskEvaluator scriptTaskEvaluator;
 
         public BuildTemplatePlanFactory(
-            SolutionInfoProvider solutionInfoProvider,
+            ProjectInfoProvider projectInfoProvider,
             IEnumerable<ISolutionScriptTaskFactory> solutionScriptTaskFactories,
             IEnumerable<IProjectScriptTaskFactory> projectScriptTaskFactories,
             TemplateFileProvider templateFileProvider, 
             ScriptTaskEvaluator scriptTaskEvaluator)
         {
-            this.solutionInfoProvider = solutionInfoProvider;
+            this.projectInfoProvider = projectInfoProvider;
             this.solutionScriptTaskFactories = solutionScriptTaskFactories.OrderBy(stf => stf.Order).ToList();
             this.projectScriptTaskFactories = projectScriptTaskFactories.OrderBy(stf => stf.Order).ToList();
             this.templateFileProvider = templateFileProvider;
             this.scriptTaskEvaluator = scriptTaskEvaluator;
-            
         }
 
         public TemplatePlan CreateTemplatePlan(InitOptions initOptions)
         {
             var buildCakeTask = new BuildCake(scriptTaskEvaluator, initOptions);
             var templatePlan = this.CreateBaseTemplatePlan(buildCakeTask, initOptions.Overwrite);
-            if (initOptions.SolutionFilePath == null)
-            {
-                // TODO: project explorer
-                Log.Warn("No solution file provided - creating default templates.");
-                return templatePlan;
-            }
-            var relativeSlnDir = new DirectoryPath(Directory.GetCurrentDirectory()).GetRelativePath(initOptions.SolutionFilePath);
-            Log.Header("Exploring projects - parsing solution {SlnFile}.", relativeSlnDir.FullPath);
-            Log.IncreaseIndent();
-            var solutionInfo = solutionInfoProvider.ParseSolution(initOptions);
+            var solutionInfo = PrepareSolutionInfo(initOptions);
+            var projects = FindProjects(solutionInfo);
+
+            var projectTasks = CreateProjectLevelTasks(solutionInfo, projects);
+            var solutionTasks = CreateSolutionLevelTasks(solutionInfo);
+
             var tasks = new List<ITask>();
-            tasks.AddRange(CreateSolutionLevelTasks(solutionInfo));
-            tasks.AddRange(CreateProjectLevelTasks(solutionInfo));
+            tasks.AddRange(solutionTasks);
+            tasks.AddRange(projectTasks);            
             buildCakeTask.AddScriptTasks(tasks.OrderBy(task => task.Type.TaskOrder));
             Log.DecreaseIndent();
             return templatePlan;
+        }
+
+        private SolutionInfo PrepareSolutionInfo(InitOptions initOptions)
+        {
+            if (initOptions.SolutionFilePath == null)
+            {
+                var currentDir = new DirectoryPath(Directory.GetCurrentDirectory());
+                Log.Header("Exploring projects - searching directory {CurrentDir}.", currentDir.FullPath);
+                Log.IncreaseIndent();
+                return new SolutionInfo(solutionPath: currentDir, buildSolution: false);
+            }
+            var relativeSlnDir = new DirectoryPath(Directory.GetCurrentDirectory()).GetRelativePath(initOptions.SolutionFilePath);
+            Log.Header("Exploring projects - parsing solution file {SlnFile}.", relativeSlnDir.FullPath);
+            return new SolutionInfo(initOptions.SolutionFilePath, initOptions.BuildSolution);
+        }
+
+        private IEnumerable<ProjectInfo> FindProjects(SolutionInfo solutionInfo)
+        {
+            if (solutionInfo.HasSlnFile)
+            {
+                return projectInfoProvider.ParseSolutionFile(solutionInfo);
+            }
+            return projectInfoProvider.ExploreDirectory(solutionInfo);
         }
 
         private TemplatePlan CreateBaseTemplatePlan(BuildCake buildCakeTask, bool shouldOverwrite)
@@ -85,11 +103,12 @@ namespace Bake.Templating.Plan
         }
 
 
-        private IEnumerable<ITask> CreateProjectLevelTasks(SolutionInfo solutionInfo)
+        private IEnumerable<ITask> CreateProjectLevelTasks(SolutionInfo solutionInfo, IEnumerable<ProjectInfo> projects)
         {
             var result = new List<ITask>();
-            foreach (var projectInfo in solutionInfo.Projects)
+            foreach (var projectInfo in projects)
             {
+                solutionInfo.AddProject(projectInfo);
                 var scriptTasks = CreateProjectTasks(projectInfo);
                 var uniqueTasks = GetNewUniqueScriptTasks(result, scriptTasks);
                 result.AddRange(uniqueTasks);
@@ -105,7 +124,7 @@ namespace Bake.Templating.Plan
             foreach (var scriptTaskFactory in scriptTaskFactories)
             {
                 var projectType = scriptTaskFactory.GetType().Name.Replace("Factory", "");
-                Log.Info("Found {ProjectType} project at {ProjectPath}.", projectType, new DirectoryPath(Directory.GetCurrentDirectory()).GetRelativePath(projectInfo.Project.Path).FullPath);
+                Log.Info("Found {ProjectType} project at {ProjectPath}.", projectType, new DirectoryPath(Directory.GetCurrentDirectory()).GetRelativePath(projectInfo.Path).FullPath);
                 var scriptTasks = scriptTaskFactory.Create(projectInfo);
                 result.AddRange(scriptTasks);
             }

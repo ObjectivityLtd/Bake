@@ -42,7 +42,7 @@ namespace Bake.Templating
             {
                 scriptState.CurrentTask = scriptTask;
                 Log.Info("Generating {TaskPart} of {Type} '{ScriptTaskName}'.", 
-                    TaskPart.ToString(), scriptTask.GetType().Name, scriptTask.Name);
+                    TaskPart, scriptTask.GetType().Name, scriptTask.Name);
                 Log.IncreaseIndent();
                 return scriptEvaluator.Evaluate(scriptTask, scriptState, scriptBody);
             }

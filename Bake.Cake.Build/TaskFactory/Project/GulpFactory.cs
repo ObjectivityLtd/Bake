@@ -11,7 +11,7 @@ namespace Bake.Cake.Build.TaskFactory.Project
 
         public override bool IsApplicable(ProjectInfo projectInfo)
         {
-            if (!projectInfo.IsWebsite())
+            if (projectInfo.SolutionProject != null && !projectInfo.IsWebsite())
             {
                 return false;
             }

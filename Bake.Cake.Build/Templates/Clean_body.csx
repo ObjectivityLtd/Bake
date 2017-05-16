@@ -1,6 +1,6 @@
 var task = CurrentTask as CleanTask;
 
-var solutionDir = BuildScriptPath.GetRelativePath(SolutionFilePath.GetDirectory()).FullPath;
+var solutionDir = BuildScriptPath.GetRelativePath(SolutionDir).FullPath;
 
 string result = $@"
 Task(""{task.Name}"")

@@ -10,11 +10,11 @@ namespace Bake.Templating
 
         private static readonly string TemplatesFolder = "Templates";
 
-        public string GetPath(ITask scriptTask, TaskPart TaskPart)
+        public string GetPath(ITask scriptTask, TaskPart taskPart)
         {
             return Path.Combine(
                 this.GetFolder(scriptTask), 
-                this.GetFileName(scriptTask, TaskPart));
+                this.GetFileName(scriptTask, taskPart));
         }
 
         private string GetFolder(ITask scriptTask)
@@ -24,10 +24,10 @@ namespace Bake.Templating
             return Path.Combine(nsWithoutLastPart, TemplatesFolder);
         }
 
-        private string GetFileName(ITask scriptTask, TaskPart TaskPart)
+        private string GetFileName(ITask scriptTask, TaskPart taskPart)
         {
             var name = scriptTask.GetType().Name;
-            return TaskRegex.Replace(name, "") + "_" + TaskPart.ToString().ToLower() + ".csx";
+            return TaskRegex.Replace(name, "") + "_" + taskPart.ToString().ToLower() + ".csx";
         }
     }
 }

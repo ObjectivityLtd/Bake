@@ -12,24 +12,23 @@ namespace Bake.Cake.Build.TaskFactory.Solution
 
         public override bool IsApplicable(SolutionInfo solutionInfo)
         {
-            return true;
+            return solutionInfo.HasSlnFile;
         }
 
         public override IEnumerable<ITask> Create(SolutionInfo solutionInfo)
         {
-            var solutionName = solutionInfo.SolutionFilePath.GetFilenameWithoutExtension().FullPath;
             var result = new List<ITask>();
             if (solutionInfo.BuildSolution)
             {
                 result.Add(new MsBuildTask(
                     taskType: MsBuildTask.MsBuildTaskType.Solution,
-                    sourceFiles: new List<FilePath> { solutionInfo.SolutionFilePath },
-                    projectName: solutionName
+                    sourceFiles: new List<FilePath> { (FilePath)solutionInfo.SolutionPath },
+                    projectName: solutionInfo.Name
                 ));
             }
             else
             {
-                result.Add(new RestoreNugetTask(solutionName));
+                result.Add(new RestoreNugetTask(solutionInfo.Name));
             }
             return result;
         }

@@ -11,7 +11,7 @@ namespace Bake.Cake.Build.TaskFactory.Project
 
         public override bool IsApplicable(ProjectInfo projectInfo)
         {
-            return projectInfo.IsWebsite() 
+            return (projectInfo.SolutionProject == null || projectInfo.IsWebsite())
                 && this.IsPackageJsonPresent(projectInfo.ProjectDirectoryPath) 
                 && this.IsNpmTestScriptPresent(projectInfo.ProjectDirectoryPath);
         }

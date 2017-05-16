@@ -1,11 +1,10 @@
 var task = CurrentTask as XUnitTestsTask;
 
-var solutionDir = BuildScriptPath.GetRelativePath(SolutionFilePath.GetDirectory());
-var solutionName = SolutionFilePath.GetFilenameWithoutExtension();
+var solutionDir = BuildScriptPath.GetRelativePath(SolutionDir);
 
 $@"
 Task(""{task.Name}"")
-    .Description(""Runs xunit tests for {solutionName}"")
+    .Description(""Runs xunit tests for {task.SolutionName}"")
     .Does(() =>
     {{
         var solutionDir = ""{solutionDir.FullPath}"";

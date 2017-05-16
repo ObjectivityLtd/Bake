@@ -3,7 +3,7 @@ var task = CurrentTask as MsBuildTask;
 var projectPaths = task.SourceFiles.Select(file => BuildScriptPath.GetRelativePath(file).FullPath).ToList();
 var projectPathsString = string.Join("," + Environment.NewLine + "            ", projectPaths.Select(path => "\"" + path + "\""));
 var restoreNuget = SolutionFilePath == null;
-var nugetPackagesDirectory = restoreNuget ? null : BuildScriptPath.GetRelativePath(SolutionFilePath.GetDirectory()).FullPath;
+var nugetPackagesDirectory = restoreNuget ? null : BuildScriptPath.GetRelativePath(SolutionDir).FullPath;
 var description = $"Builds {task.TaskType} package" + (task.ProjectName != "" ? $" {task.ProjectName}" : "");
 
 var result = $@"

@@ -14,30 +14,31 @@ namespace Bake.API.ScriptTaskFactory
         {
             get
             {
-                if (Project == null)
+                if (System.IO.File.Exists(Path.FullPath))
                 {
-                    return null;
+                    return Path.GetDirectory();
                 }
-                if (System.IO.File.Exists(Project.Path.FullPath))
+                if (System.IO.Directory.Exists(Path.FullPath))
                 {
-                    return Project.Path.GetDirectory();
-                }
-                if (System.IO.Directory.Exists(Project.Path.FullPath))
-                {
-                    return new DirectoryPath(Project.Path.FullPath);
+                    return new DirectoryPath(Path.FullPath);
                 }
                 return null;
             }
         }
 
-        public SolutionProject Project { get; }
+        public FilePath Path { get;  }
+
+        public string Name => SolutionProject != null ? SolutionProject.Name : Path.GetFilenameWithoutExtension().FullPath;
+
+        public SolutionProject SolutionProject { get; }
 
         public ProjectParserResult ParserResult { get; }
 
-        public ProjectInfo(SolutionInfo solutionInfo, SolutionProject project, ProjectParserResult parserResult)
+        public ProjectInfo(SolutionInfo solutionInfo, FilePath path, SolutionProject solutionProject, ProjectParserResult parserResult)
         {
             this.SolutionInfo = solutionInfo;
-            this.Project = project;
+            this.Path = path;
+            this.SolutionProject = solutionProject;
             this.ParserResult = parserResult;
         }
 
@@ -48,28 +49,27 @@ namespace Bake.API.ScriptTaskFactory
 
         public bool IsWebApplication()
         {
-            return ParserResult != null && ParserResult.IsWebApplication(Project.Path.FullPath);
+            return ParserResult != null && ParserResult.IsWebApplication(Path.FullPath);
         }
 
         public bool IsWebsite()
         {
-            return Project != null && MsBuildGuids.IsWebSite(Project.Type);
+            return SolutionProject != null && MsBuildGuids.IsWebSite(SolutionProject.Type);
         }
 
-        public bool IsCSharpLibraryProject()
+        public bool IsLibraryProject()
         {
             return ParserResult != null
-                    && MsBuildGuids.IsCSharp(Project.Type)
-                    && !ParserResult.IsWebApplication(Project.Path.FullPath)
+                    && !ParserResult.IsWebApplication(Path.FullPath)
                     && !ParserResult.IsExecutableApplication();
         }
 
         public bool IsUnitTestProject()
         {
             return ParserResult != null
-                && IsCSharpLibraryProject()
-                   && (ParserResult.IsTestProjectType(Project.Path.FullPath)
-                    || ParserResult.IsMsTestProject(Project.Path.FullPath)
+                && IsLibraryProject()
+                   && (ParserResult.IsTestProjectType(Path.FullPath)
+                    || ParserResult.IsMsTestProject(Path.FullPath)
                     || FindReference("nunit") != null 
                     || FindReference("xunit") != null);
         }

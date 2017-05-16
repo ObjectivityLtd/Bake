@@ -16,7 +16,7 @@ namespace Bake.Cake.Build.TaskFactory.Project
 
         public override bool IsApplicable(ProjectInfo projectInfo)
         {
-            if (!projectInfo.IsCSharpLibraryProject())
+            if (!projectInfo.IsLibraryProject())
             {
                 return false;
             }
@@ -28,7 +28,7 @@ namespace Bake.Cake.Build.TaskFactory.Project
             if (!ContainsMigrations(projectInfo.ParserResult))
             {
                 Log.Debug("Project {ProjectFile} has reference to Entity Framework but it has no reference to {Dir} directory - skipping.",
-                    projectInfo.Project.Path.GetFilename(), "migrations");
+                    projectInfo.Path.GetFilename(), "migrations");
                 return false;
             }
             return true;
@@ -37,15 +37,14 @@ namespace Bake.Cake.Build.TaskFactory.Project
 
         public override IEnumerable<ITask> Create(ProjectInfo projectInfo)
         {
-            var sourceFile = projectInfo.Project.Path;
+            var sourceFile = projectInfo.Path;
             var sourceDir = sourceFile.GetDirectory();
-            var projectName = projectInfo.Project.Name;
             var entityFrameworkReference = projectInfo.FindReference("EntityFramework");
             var entityFrameworkDllFilePath = GetPathToEntityFramework(sourceDir, entityFrameworkReference);
             var entityFrameworkMigrateFilePath = GetPathToMigrate(entityFrameworkDllFilePath);
             return new List<ITask>
             {
-                new EntityFrameworkMigrationsTask(sourceFile, projectName, entityFrameworkDllFilePath, entityFrameworkMigrateFilePath)
+                new EntityFrameworkMigrationsTask(sourceFile, projectInfo.Name, entityFrameworkDllFilePath, entityFrameworkMigrateFilePath)
             };
         }
 

@@ -5,7 +5,7 @@ namespace Bake.Cake.Build.Task
 {
     public class EntityFrameworkMigrationsTask : ITask
     {
-        public string Name => "Build " + this.SourceFile.GetFilenameWithoutExtension().FullPath;
+        public string Name => "Build " + SourceFile.GetFilenameWithoutExtension().FullPath;
 
         public TaskType Type => TaskType.BuildBackend;
 

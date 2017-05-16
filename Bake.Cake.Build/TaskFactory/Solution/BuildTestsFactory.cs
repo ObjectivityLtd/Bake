@@ -19,7 +19,7 @@ namespace Bake.Cake.Build.TaskFactory.Solution
         public override IEnumerable<ITask> Create(SolutionInfo solutionInfo)
         {
             var testProjects = solutionInfo.Projects.Where(projectInfo => projectInfo.IsUnitTestProject() && !projectInfo.IsWebDriverProject())
-                .Select(projectInfo => projectInfo.Project.Path);
+                .Select(projectInfo => projectInfo.Path);
             return new List<ITask>
             {
                 new MsBuildTask(
