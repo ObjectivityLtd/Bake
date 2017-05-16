@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard1.6;net46</TargetFrameworks>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Cake.Core" Version="0.19.5" />
+    <PackageReference Include="Cake.Common" Version="0.19.5" />
+    <PackageReference Include="Serilog" Version="2.4.0" />
+  </ItemGroup>
+</Project>

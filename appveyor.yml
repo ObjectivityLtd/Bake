@@ -34,7 +34,7 @@ build_script:
   
 artifacts:
   - path: build\*.nupkg
-    name: Cake.CD
+    name: Bake
     
 deploy:
   - provider: GitHub
@@ -46,15 +46,9 @@ deploy:
       branch: master
       appveyor_repo_tag: true
   - provider: NuGet
-    api_key: $(NugetApiKey)
-    artifact: /build/Cake.CD.\d.*\.nupkg/
-    on:
-      branch: master
-      appveyor_repo_tag: true
-  - provider: NuGet
     server: https://chocolatey.org/api/v2/
     api_key: $(ChocolateyApiKey)
-    artifact: /build/Cake.CD.portable.\d.*\.nupkg/
+    artifact: /build/Bake.\d.*\.nupkg/
     on:
       branch: master
       appveyor_repo_tag: true

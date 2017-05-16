@@ -12,8 +12,8 @@ var packageVersion = Argument<string>("packageVersion", "0.0.1");
 // GLOBAL VARIABLES
 ///////////////////////////////////////////////////////////////////////////////
 
-var sourceDir = "../src";
-var outputDir = "../src/bin";
+var sourceDir = Directory("..");
+var outputDir = Directory("../bin");
 
 ///////////////////////////////////////////////////////////////////////////////
 // TASK DEFINITIONS
@@ -27,33 +27,30 @@ Task("Clean")
 });
 
 Task("Build")
-    .Description("Builds Cake.CD")
+    .Description("Builds Bake")
     .Does(() =>
 {
-    DotNetCoreRestore(sourceDir + "/Cake.CD.csproj");
+	var projectPath = sourceDir + File("Bake.sln");
+
+    NuGetRestore(projectPath);
     
-    var settings = new DotNetCoreBuildSettings
-    {
-        Configuration = "Release",
-        ArgumentCustomization = args => args.Append("/p:Version=" + packageVersion)
-    };
-    DotNetCoreBuild(sourceDir + "/Cake.CD.csproj", settings);
+	MSBuild(projectPath, settings => 
+		settings
+			.SetConfiguration(configuration)
+			.SetVerbosity(Verbosity.Minimal)
+			.WithProperty("Version", packageVersion)
+    );
 });
 
 Task("Package")
-    .Description("Creates nuget and chocolatey package")
+    .Description("Creates chocolatey package")
     .IsDependentOn("Build")
     .Does(() =>
 {
-    var nugetPackSettings = new NuGetPackSettings {
-        Version = packageVersion
-    };
-    NuGetPack("Cake.CD.nuspec", nugetPackSettings);
-
 	var chocolateyPackSettings = new ChocolateyPackSettings {
 		Version = packageVersion
 	};
-	ChocolateyPack("Cake.CD.portable.nuspec", chocolateyPackSettings);
+	ChocolateyPack("Bake.nuspec", chocolateyPackSettings);
 });
 
 ///////////////////////////////////////////////////////////////////////////////

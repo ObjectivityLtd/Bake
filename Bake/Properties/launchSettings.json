@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "Bake": {
+      "commandName": "Project",
+      "commandLineArgs": "init src/Objectivity.Holiday.sln -o",
+      "workingDirectory": "c:\\b\\HolidayApp"
+    }
+  }
+}

@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <ProjectGuid>{E4F42978-7C78-4F45-AF98-CB4D42A326B0}</ProjectGuid>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Bake</RootNamespace>
+    <AssemblyName>Bake</AssemblyName>
+    <Version>0.0.1</Version>
+    <TargetFrameworks>netcoreapp1.1;net46</TargetFrameworks>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Cake.Common" Version="0.19.5" />
+    <PackageReference Include="Autofac" Version="4.5.0" />
+    <PackageReference Include="Microsoft.Extensions.CommandLineUtils" Version="1.1.1">
+      <PrivateAssets>All</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.PlatformAbstractions" Version="1.1.0">
+      <PrivateAssets>All</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Serilog" Version="2.4.0" />
+    <PackageReference Include="Serilog.Sinks.Literate" Version="2.1.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="2.1.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Bake.API\Bake.API.csproj">
+      <Project>{33ecbdc5-4082-49a2-bccf-d21aac77ad8b}</Project>
+      <Name>Bake.API</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Bake.Cake.Build\Bake.Cake.Build.csproj">
+      <Project>{b492b4e9-2673-4cb9-88ee-cc561416806e}</Project>
+      <Name>Bake.Cake.Build</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Bake.Cake.Deploy\Bake.Cake.Deploy.csproj">
+      <Project>{c01757a3-eec8-4f17-94ce-df4eb16b40a3}</Project>
+      <Name>Bake.Cake.Deploy</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

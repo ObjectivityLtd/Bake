@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata minClientVersion="2.8">
+    <id>Bake</id>
+    <version>$version$</version>
+    <title>Bake - a Cake generator for Continuous Delivery</title>
+    <authors>ObjectivityLtd</authors>
+    <projectUrl>https://github.com/ObjectivityLtd/Bake</projectUrl>
+    <licenseUrl>https://github.com/ObjectivityLtd/Bake/blob/master/LICENSE</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Generates build and deploy scripts for .NET 4 / .NET 5 projects using Cake.</description>
+    <copyright>Objectivity Bespoke Software Specialists, MIT license</copyright>
+    <tags>build deploy cake CI CD continuous integration delivery cli</tags>
+    <developmentDependency>true</developmentDependency>
+  </metadata>
+  <files>
+    <file src="..\Bake\bin\Release\net46\**" />
+    <file src="..\Bake.*\templates\**" target="." />
+  </files>
+</package>

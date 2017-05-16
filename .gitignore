@@ -1,8 +1,10 @@
 Build/tools
-/src/obj
-/src/bin
+Build/Bake.0.0.1
+obj
+bin
 /.vscode
 /.vs
 *.nupkg
 /src/*.user
 /src/Properties/launchSettings.json
+packages
